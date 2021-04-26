@@ -1,0 +1,83 @@
+.main {
+    border: 1px solid #F0F0F0;
+    padding-bottom: 40px;
+    width: 400px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 4px;
+}
+
+.header {
+    padding-top: 24px;
+    margin: auto;
+    width: 300px;
+    p {
+        font-size: 20px;
+        font-weight: 700;
+    }
+}
+
+.login-form {
+    margin: auto;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+
+    &__input-field {
+        margin-top: 20px;
+    }
+
+    &__btn {
+        margin-top: 20px;
+    }
+}
+
+.info-container {
+    margin: auto;
+    width: 300px;
+
+    p {
+        mat-checkbox {
+            margin-right: 5px;
+        }
+        margin-top: 20px;
+        display: flex;
+        flex-direction: row;
+    }
+
+    a {
+        color: blue;
+    }
+    
+}
+
+.spinner {
+    display: flex;
+    justify-content: center;
+    transition:all 0.5s ease;
+
+    &__text {
+        position: relative;
+        top: 60px;
+        left: -123px;
+        color: #F0F0F0;
+        letter-spacing: 1px;
+    }
+}
+
+.blank-form {
+    display: none;
+}
+
+.signup-successful {
+    display: flex;
+    justify-content: center; 
+    color: #F0F0F0;
+    letter-spacing: 1px;
+}
+
+.main-with-no-background {
+    background-color: unset;
+}

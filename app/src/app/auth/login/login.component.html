@@ -1,0 +1,43 @@
+<div class="main">
+   <form class="login-form">
+        <mat-form-field class="example-full-width login-form__input-field">
+            <mat-label>
+                Email address
+            </mat-label>
+            <input matInput type="email" [formControl]='emailAddress'>
+            <mat-error *ngIf="emailAddress.errors?.email && !emailAddress.errors?.required">
+                Please enter a valid email address
+            </mat-error>
+            <mat-error *ngIf="emailAddress.errors?.required && !emailAddress.errors?.email">
+                Email address is <strong>required</strong>
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="example-full-width login-form__input-field">
+            <mat-label>
+                Password
+            </mat-label>
+            <input matInput type="password" [formControl]="password">
+            <mat-error *ngIf="password.errors?.required">
+                Password is <strong>required</strong>
+            </mat-error>
+        </mat-form-field>
+        <button mat-raised-button class="login-form__btn" color="primary" (click)="submitForm()">Login</button>
+    </form>
+
+    <div class="info-container">
+        <p>
+            By signing in or creating an account, you agree to the <a href="#">Freight Exchange Terms</a>
+        </p>
+        <p>
+            <mat-checkbox [color]="'primary'"></mat-checkbox>
+            Keep me signed in.
+        </p>
+        <p>
+            New to Freight Exchange?
+        </p>
+        
+        <button mat-raised-button class="info-container__btn" color="primary" (click)="redirectToRegister()">Create your Freight Exchange Account</button>
+    </div>
+
+</div>

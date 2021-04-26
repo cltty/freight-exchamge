@@ -1,0 +1,181 @@
+<mat-horizontal-stepper class="stepper-container">
+  <mat-step [stepControl]="firstFormGroup" errorMessage="Name is required.">
+    <form class="stepper-container__stepper-one" [formGroup]="firstFormGroup">
+      <ng-template matStepLabel>Company Details</ng-template>
+      
+      <div class="form">
+        <div class="form__left-column">
+          <mat-form-field class="stepper-container__stepper-one--company-legal-name">
+            <mat-label>Company legal name</mat-label>
+            <input matInput formControlName="vatNumber" required>
+          </mat-form-field>
+
+          <mat-form-field class="stepper-container__stepper-one--company-type" appearance="fill">
+            <mat-label>Company type</mat-label>
+            <mat-select formControlName="companyType" single>
+              <mat-option *ngFor="let companyType of companyTypes" [value]="companyType">
+                {{ companyType }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        
+          <mat-form-field class="stepper-container__stepper-one--address-line-1">
+            <mat-label>Address line 1</mat-label>
+            <input matInput formControlName="addressLine1" required>
+          </mat-form-field>
+  
+          
+          <div class="left-column__item">
+            <mat-form-field class="stepper-container__stepper-one--city">
+              <mat-label>Town/City</mat-label>
+              <input matInput formControlName="addressLine1" required>
+            </mat-form-field>
+          
+            <mat-form-field class="stepper-container__stepper-one--state">
+              <mat-label>State (optional)</mat-label>
+              <input matInput formControlName="addressLine1" required>
+            </mat-form-field>
+          </div>
+  
+          <mat-form-field class="stepper-container__stepper-one--company-VAT">
+            <mat-label>VAT number</mat-label>
+            <input matInput formControlName="vatNumber" required>
+          </mat-form-field>
+
+        </div>
+
+        <div class="form__right-column">
+          <mat-form-field class="stepper-container__stepper-one--country-name" appearance="fill">
+            <mat-label>Country</mat-label>
+            <mat-select formControlName="countryName" single>
+              <mat-option *ngFor="let country of contriesList" [value]="country">
+                {{ country }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="stepper-container__stepper-one--domiciles" appearance="fill">
+            <mat-label>Domicile(s)</mat-label>
+            <mat-select formControlName="domiciles" single>
+              <mat-option *ngFor="let country of contriesList" [value]="country">
+                {{ country }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="stepper-container__stepper-one--address-line-2">
+            <mat-label>Address line 2 (optional)</mat-label>
+            <input matInput formControlName="addressLine2" required>
+          </mat-form-field>
+
+          <mat-form-field class="stepper-container__stepper-one--postcode">
+            <mat-label>Postcode</mat-label>
+            <input matInput formControlName="postcode" required>
+          </mat-form-field>
+
+          <mat-form-field class="stepper-container__stepper-one--phone-number">
+            <mat-label>Phone number</mat-label>
+            <input matInput formControlName="phoneNumber" required>
+          </mat-form-field>
+
+          <div>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+
+        </div>
+      </div>
+  
+    </form>
+  </mat-step>
+
+  <mat-step class="stepper-container__stepper-two" [stepControl]="secondFormGroup" errorMessage="Address is required.">
+    <form [formGroup]="secondFormGroup">
+      <ng-template matStepLabel>Equipment inventory</ng-template>
+      <mat-form-field>
+        <mat-label>Address</mat-label>
+        <input matInput placeholder="Ex. 1 Main St, New York, NY" formControlName="secondCtrl"
+                required>
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+
+  <mat-step class="stepper-container__stepper-three" [stepControl]="secondFormGroup" errorMessage="Address is required.">
+    <form [formGroup]="secondFormGroup">
+      <ng-template matStepLabel>Insurance documents</ng-template>
+      <mat-form-field>
+        <mat-label>Address</mat-label>
+        <input matInput placeholder="Ex. 1 Main St, New York, NY" formControlName="secondCtrl"
+                required>
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+
+  <mat-step class="stepper-container__stepper-three" [stepControl]="secondFormGroup" errorMessage="Address is required.">
+    <form [formGroup]="secondFormGroup">
+      <ng-template matStepLabel>Operating Licence</ng-template>
+      <mat-form-field>
+        <mat-label>Address</mat-label>
+        <input matInput placeholder="Ex. 1 Main St, New York, NY" formControlName="secondCtrl"
+                required>
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+
+  <mat-step class="stepper-container__stepper-four" [stepControl]="secondFormGroup" errorMessage="Address is required.">
+    <form [formGroup]="secondFormGroup">
+      <ng-template matStepLabel>Payment</ng-template>
+      <mat-form-field>
+        <mat-label>Address</mat-label>
+        <input matInput placeholder="Ex. 1 Main St, New York, NY" formControlName="secondCtrl"
+                required>
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+
+  <mat-step class="stepper-container__stepper-five">
+    <ng-template matStepLabel>Done</ng-template>
+    <p>You are now done.</p>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button (click)="stepper.reset()">Reset</button>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>
+
+
+
+<!-- _----- -->
+<!-- <mat-form-field class="stepper-container__stepper-one--company-name">
+  <mat-label>Company Name</mat-label>
+  <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
+</mat-form-field>
+
+<span class="stepper-container__stepper-one--company-type input-field-width">
+  <label id="example-radio-group-label">Pick your company type</label>
+  <mat-radio-group
+    aria-labelledby="example-radio-group-label"
+    class="example-radio-group">
+    <mat-radio-button
+      class="example-radio-button"
+      *ngFor="let companyType of companyTypes"
+      [value]="companyType">
+      {{ companyType }}
+    </mat-radio-button>
+  </mat-radio-group>
+</span> -->

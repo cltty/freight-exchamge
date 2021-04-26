@@ -1,0 +1,164 @@
+<!-- [ngClass]="displaySpinner || hideForm ? 'blank-form' : 'main'" -->
+<div [ngClass]="displaySpinner || hideForm ? 'main-with-no-background' : 'main'">
+    <div class="spinner" *ngIf="displaySpinner">
+        <mat-spinner [diameter]=160></mat-spinner>
+        <div class="spinner__text">
+            {{ spinnerText }}
+        </div>
+    </div>
+
+    <div [ngClass]="displaySpinner || hideForm ? 'blank-form' : null">
+
+        <div class="header">
+            <p>Create your account</p>
+        </div>
+    
+        <form  class="login-form">
+            <mat-form-field class="example-full-width login-form__input-field">
+                <mat-label>
+                    Your name
+                </mat-label>
+                <input matInput type="text" [formControl]='name'>
+                <mat-error *ngIf="name.errors?.invalidCharacters">
+                    Invalid characters used, such as !, #, <> etc.   
+                </mat-error>
+                <mat-error *ngIf="name.errors?.required">
+                    Your name is <strong>required</strong>  
+                </mat-error>
+            </mat-form-field>
+    
+             <mat-form-field class="example-full-width login-form__input-field">
+                 <mat-label>
+                     Email address
+                 </mat-label>
+                 <input matInput type="email" [formControl]='emailAddress'>
+                 <mat-error *ngIf="emailAddress.errors?.email && !emailAddress.errors?.required">
+                     Please enter a valid email address
+                 </mat-error>
+                 <mat-error *ngIf="emailAddress.errors?.required && !emailAddress.errors?.email">
+                     Email address is <strong>required</strong>
+                 </mat-error>
+                 <mat-error *ngIf="emailAddress.errors?.invalidCharacters">
+                    Invalid characters used, such as !, #, <> etc.   
+                </mat-error>
+             </mat-form-field>
+     
+             <mat-form-field class="example-full-width login-form__input-field">
+                 <mat-label>
+                     Password
+                 </mat-label>
+                 <input matInput type="password" [formControl]="password">
+                 <mat-error *ngIf="password.errors?.required">
+                     Password is <strong>required</strong>
+                 </mat-error>
+                 <mat-error *ngIf="password.errors?.invalidCharacters">
+                    Invalid characters used, such as !, #, <> etc.   
+                </mat-error>
+             </mat-form-field>
+    
+             <mat-form-field class="example-full-width login-form__input-field">
+                <mat-label>
+                    Re-enter password
+                </mat-label>
+                <input matInput type="password" [formControl]="repeatPassword">
+                <mat-error *ngIf="repeatPassword.errors?.required">
+                    Password is <strong>required</strong>
+                </mat-error>
+                <mat-error *ngIf="repeatPassword.errors?.invalidCharacters">
+                    Invalid characters used, such as !, #, <> etc.   
+                </mat-error>
+                <!-- passwordsNotMatching -->
+                <mat-error *ngIf="repeatPassword.errors?.passwordsNotMatching">
+                    Passwords does not match!
+                </mat-error>
+            </mat-form-field>
+             <button mat-raised-button class="login-form__btn" color="primary" (click)="submitForm()">Create your Freight Exchange Account</button>
+         </form>
+    
+         <div class="info-container">
+             <p>
+                <mat-checkbox [color]="'primary'"></mat-checkbox> 
+                I agree the <a href="#">Freight Exchange Terms</a>
+             </p>
+         </div>
+    </div>
+
+    <div [ngClass]="!hideForm  || displaySpinner? 'blank-form' : 'signup-successful'">
+        <span>
+            {{ signupSuccessfulMessage }}
+        </span>
+    </div>
+
+    <!-- <div class="header">
+        <p>Create your account</p>
+    </div>
+
+    <form  class="login-form">
+        <mat-form-field class="example-full-width login-form__input-field">
+            <mat-label>
+                Your name
+            </mat-label>
+            <input matInput type="text" [formControl]='name'>
+            <mat-error *ngIf="name.errors?.invalidCharacters">
+                Invalid characters used, such as !, #, <> etc.   
+            </mat-error>
+            <mat-error *ngIf="name.errors?.required">
+                Your name is <strong>required</strong>  
+            </mat-error>
+        </mat-form-field>
+
+         <mat-form-field class="example-full-width login-form__input-field">
+             <mat-label>
+                 Email address
+             </mat-label>
+             <input matInput type="email" [formControl]='emailAddress'>
+             <mat-error *ngIf="emailAddress.errors?.email && !emailAddress.errors?.required">
+                 Please enter a valid email address
+             </mat-error>
+             <mat-error *ngIf="emailAddress.errors?.required && !emailAddress.errors?.email">
+                 Email address is <strong>required</strong>
+             </mat-error>
+             <mat-error *ngIf="emailAddress.errors?.invalidCharacters">
+                Invalid characters used, such as !, #, <> etc.   
+            </mat-error>
+         </mat-form-field>
+ 
+         <mat-form-field class="example-full-width login-form__input-field">
+             <mat-label>
+                 Password
+             </mat-label>
+             <input matInput type="password" [formControl]="password">
+             <mat-error *ngIf="password.errors?.required">
+                 Password is <strong>required</strong>
+             </mat-error>
+             <mat-error *ngIf="password.errors?.invalidCharacters">
+                Invalid characters used, such as !, #, <> etc.   
+            </mat-error>
+         </mat-form-field>
+
+         <mat-form-field class="example-full-width login-form__input-field">
+            <mat-label>
+                Re-enter password
+            </mat-label>
+            <input matInput type="password" [formControl]="repeatPassword">
+            <mat-error *ngIf="repeatPassword.errors?.required">
+                Password is <strong>required</strong>
+            </mat-error>
+            <mat-error *ngIf="repeatPassword.errors?.invalidCharacters">
+                Invalid characters used, such as !, #, <> etc.   
+            </mat-error>
+            
+            <mat-error *ngIf="repeatPassword.errors?.passwordsNotMatching">
+                Passwords does not match!
+            </mat-error>
+        </mat-form-field>
+         <button mat-raised-button class="login-form__btn" color="primary" (click)="submitForm()">Create your Freight Exchange Account</button>
+     </form>
+
+     <div class="info-container">
+         <p>
+            <mat-checkbox [color]="'primary'"></mat-checkbox> 
+            I agree the <a href="#">Freight Exchange Terms</a>
+         </p>
+     </div> -->
+ </div>

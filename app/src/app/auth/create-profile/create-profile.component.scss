@@ -1,0 +1,68 @@
+.stepper-container {
+    border: 1px solid #F0F0F0;
+    padding-bottom: 40px;
+    // width: 400px;
+    margin: auto;
+    background-color: white;
+    border-radius: 4px;
+
+    &__stepper-one {
+        .form {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            &__left-column {
+                display: flex;
+                flex-direction: column;
+                
+                &--item {
+                    display: flex;
+                    flex-direction: row;              
+                }
+            }
+
+            &__right-column {
+                display: flex;
+                flex-direction: column;
+            }
+        }
+
+        display: flex;
+        flex-direction: column;
+
+        &--country-name {
+            width: 380px;
+        }
+
+        &--city {
+            margin-right: 20px;
+        }
+
+        &--phone-number {
+            width: 380px;
+            margin-right: 20px;
+        }
+
+        &--domiciles {
+            width: 380px;
+        }
+    }
+
+    &__stepper-two {
+
+    }
+
+    &__stepper-three {
+
+    }
+}
+
+.left-column {
+    display: flex;
+    flex-direction: column;
+
+    &__item {
+        display: flex;
+        flex-direction: row;
+    }
+}

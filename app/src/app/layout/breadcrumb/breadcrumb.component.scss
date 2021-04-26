@@ -1,0 +1,40 @@
+.main {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: 100px;
+}
+
+.logo {
+    color: #ffffff;
+    font-family: Roboto,Helvetica Neue,sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    p {
+        margin-top: 12px;
+    }
+}
+
+.actions-container {
+    display: flex;
+    flex-direction: row;
+    margin-right: 100px;
+
+    &__item {
+        text-decoration: none;
+        cursor: pointer;
+        color: #ffffff;
+        font-family: Roboto,Helvetica Neue,sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        margin: 12px 0px 12px 30px;
+
+        // &:hover {
+        //     letter-spacing: 2px;
+        //     // background-color: #ebe0d6;
+        //     color: #F0F0F0;
+        //     box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+        //     transition: all 0.3s ease 0s;
+        // }
+    }
+}
