@@ -4,7 +4,7 @@ import { CreateProfileComponent } from './auth/create-profile/create-profile.com
 import { GetStartedComponent } from './auth/get-started/get-started.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
-
+import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
 
 const routes: Routes = [
   { path: 'login', 
@@ -17,10 +17,14 @@ const routes: Routes = [
     path: 'get-started/register',
     component: RegisterComponent
   },
-  { path: 'create-profile', 
+  {
+    path: 'create-profile', 
     component: CreateProfileComponent, 
   },
-  
+  { 
+    path: 'loadboard', 
+    component: DashboardComponent, 
+  },
 ];
 
 @NgModule({

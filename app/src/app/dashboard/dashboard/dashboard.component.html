@@ -1,0 +1,44 @@
+<div class="example-container">
+    <mat-toolbar color="primary" class="example-toolbar">
+      <button mat-icon-button (click)="snav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <h2 class="example-app-name">Freight Exchange</h2>
+    </mat-toolbar>
+  
+    <mat-sidenav-container class="example-sidenav-container">
+      <mat-sidenav #snav [mode]="'side'" class="side-navbar">
+        <mat-nav-list class="side-navbar__option">
+          <a mat-list-item id="company-name">
+            {{ companyProfile?.companyDetails.companyLegalName }}
+          </a>  
+          <a mat-list-item *ngFor="let sideNavbarOption of sideNavbarOptions" (click)="onSideNavbarOptionClick(sideNavbarOption.optionValue)">
+              {{ sideNavbarOption.optionName }}
+          </a>
+          <a id="logout-btn" mat-list-item (click)="onLogout()">Logout</a>
+        </mat-nav-list>
+      </mat-sidenav>
+      <mat-sidenav-content class='sidenav-content'>
+          <div *ngIf="currentActiveSection === 0">
+            <fx-notifications [companyProfile]="companyProfile"></fx-notifications>
+          </div>
+
+          <div *ngIf="currentActiveSection === 1">
+            <fx-trips [companyProfile]="companyProfile"></fx-trips>
+          </div>
+          
+          <div *ngIf="currentActiveSection === 2">
+            <fx-loadboard [companyProfile]="companyProfile"></fx-loadboard>
+          </div>
+
+          <div *ngIf="currentActiveSection === 3">
+            <fx-performance [companyProfile]="companyProfile"></fx-performance>
+          </div>
+
+          <div *ngIf="currentActiveSection === 4">
+            <fx-company-account [companyProfile]='companyProfile'></fx-company-account>
+          </div>
+        
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div>

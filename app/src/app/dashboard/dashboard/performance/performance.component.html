@@ -1,0 +1,158 @@
+<div class="main">
+    <div class="top-section">
+        <div class="top-section__left">
+            <p>
+                You performance for selected time period is :
+            </p>
+            <mat-radio-group 
+                [(ngModel)]="selectedRadio"
+                [ngModelOptions]="{standalone: true}" 
+                (change)="radioChange($event)"
+            >
+                <mat-radio-button color='primary' value="sixWeeks">past 6 weeks</mat-radio-button>
+                <mat-radio-button color='primary' value="allTime">all time</mat-radio-button>
+            </mat-radio-group>
+        </div>
+
+        <div class="top-section__right">
+            <p>
+                {{ performance }} %
+            </p>
+        </div>
+    </div>
+
+    <div class="bottom-section">
+        <div class="bottom-section__loads">
+            <mat-expansion-panel hideToggle>
+                <mat-expansion-panel-header>
+                    <mat-panel-title class="panel-title">
+                        <p> Click to see your loads </p>
+                    </mat-panel-title>
+                    <mat-panel-description class="panel-description">
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div class="content">
+                    <div class="work-opportunities">
+                        <div class="work-opportunities" *ngFor="let load of loadsForSelectedTimePeriod;let i = index">
+                            <div class="work-opportunity">
+                                <mat-expansion-panel hideToggle>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title class="panel-title">
+                                            <div class="origin">
+                                                <div class="origin__name">
+                                                    {{ load.origin.city }}
+                                                </div>
+                                                <div class="origin__arrival">
+                                                    {{ load.origin.arrival | date: 'dd/MM/yyyy' }}
+                                                </div>
+                                            </div>
+                
+                                            <div class="origin">
+                                                <div class="origin__name">
+                                                    {{ load.destination.city }}
+                                                </div>
+                                                <div class="origin__arrival">
+                                                    {{ load.destination.arrival | date: 'dd/MM/yyyy' }}
+                                                </div>
+                                            </div>
+                                        </mat-panel-title>
+                                        <mat-panel-description class="panel-description">
+                                            <div class="distance">
+                                                <p>{{ load.distance }} km</p>
+                                            </div>
+                                            <div class="equipment">
+                                                <div>
+                                                    {{ load.equipment.equipment }}
+                                                </div>
+                                                <div>
+                                                    {{ load.isRequired ? 'Required' : 'Not required' }}
+                                                </div>
+                                            </div>
+                                            <div class="price">
+                                                <div>
+                                                    {{ load.payout }} €
+                                                </div>
+                                            </div>
+                                        </mat-panel-description>
+                                    </mat-expansion-panel-header>
+                                    <div class="details">
+                                        <div class="shipper-info">
+                                            <div>
+                                                Shipper information
+                                            </div>
+                                            <div>
+                                                {{ load.shipperDetails.shipperName }}
+                                            </div>
+                                            <div>
+                                                {{ load.shipperDetails.shipperPhoneNumber }}
+                                            </div>
+                                            <div>
+                                                {{ load.shipperDetails.shipperEmailAddress }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+                            </div>
+                        </div>
+                    </div>        
+                </div>
+            </mat-expansion-panel>
+        </div>
+
+        <div class="bottom-section__reports">
+            <mat-expansion-panel hideToggle>
+                <mat-expansion-panel-header>
+                    <mat-panel-title class="panel-title">
+                        <p> Click to see your reports </p>
+                    </mat-panel-title>
+                    <mat-panel-description class="panel-description">
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div class="content">
+                    <div class="work-opportunities">
+                        <div class="work-opportunities" *ngFor="let report of reportsForSelectedTimePeriod;let i = index">
+                            <div class="work-opportunity">
+                                <mat-expansion-panel hideToggle>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title class="panel-title">
+                                            <div class="origin">
+                                                <div class="origin__name">
+                                                    {{ report.reportedBy.companyLegalName }}
+                                                </div>
+                                                <div class="origin__arrival">
+                                                    {{ report.createdAt | date: 'dd/MM/yyyy' }}
+                                                </div>
+                                            </div>
+                                        </mat-panel-title>
+                                        <mat-panel-description class="panel-description">
+                                            <div class='report-description'>
+                                                {{ report.reason }}
+                                            </div>
+                                        </mat-panel-description>
+                                    </mat-expansion-panel-header>
+                                    <div class="details">
+                                        <div class="shipper-info">
+                                            <div>
+                                                Company information
+                                            </div>
+                                            <div>
+                                                {{ report.reportedBy.companyLegalName }}
+                                            </div>
+                                            <div>
+                                                {{ report.reportedBy.companyEmailAddress }}
+                                            </div>
+                                            <div>
+                                                {{ report.reportedBy.companyPhoneNumber }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+                            </div>
+                        </div>
+                    </div>        
+                </div>
+            </mat-expansion-panel>
+        </div>
+    </div>
+
+</div>

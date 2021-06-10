@@ -1,0 +1,77 @@
+<div class="main">
+    <div class="top-section" [formGroup]="searchCriteriaForm">
+        <p><strong>Available work opportunities</strong></p>
+    </div>
+
+    <div class="bottom-section">
+        <div class="action-btns-container">
+            <!-- <mat-icon>pause</mat-icon> -->
+            <mat-icon (click)="getAllUnbookedLoads()">refresh</mat-icon>
+        </div>
+        <div class="work-opportunities">
+            <div class="work-opportunities" *ngFor="let workOpportunity of availableLoads;let i = index">
+                <div class="work-opportunity">
+                    <mat-expansion-panel hideToggle>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title class="panel-title">
+                                <div class="origin">
+                                    <div class="origin__name">
+                                        {{ workOpportunity.origin.city }}
+                                    </div>
+                                    <div class="origin__arrival">
+                                        {{ workOpportunity.origin.arrival }}
+                                    </div>
+                                </div>
+    
+                                <div class="origin">
+                                    <div class="origin__name">
+                                        {{ workOpportunity.destination.city }}
+                                    </div>
+                                    <div class="origin__arrival">
+                                        {{ workOpportunity.destination.arrival }}
+                                    </div>
+                                </div>
+                            </mat-panel-title>
+                            <mat-panel-description class="panel-description">
+                                <div class="distance">
+                                    <p>{{ workOpportunity.distance }} km</p>
+                                </div>
+                                <div class="equipment">
+                                    <div>
+                                        {{ workOpportunity.equipment.equipment }}
+                                    </div>
+                                    <div>
+                                        {{ workOpportunity.isRequired ? 'Required' : 'Not required' }}
+                                    </div>
+                                </div>
+                                <div class="price">
+                                    <div>
+                                        {{ workOpportunity.payout }} €
+                                    </div>
+                                </div>
+                                <div *ngIf="companyType === 'Carrier'" class="action-btn">
+                                    <button mat-raised-button color="primary" (click)="bookLoad(i);$event.stopPropagation()">Book</button>
+                                </div>                
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <div class="details">
+                            <div class="shipper-info">
+                                <div>
+                                    Shipper information
+                                </div>
+                                <div>
+                                    {{ workOpportunity.shipperDetails.shipperName }}
+                                </div>
+                                <div>
+                                    {{ workOpportunity.shipperDetails.shipperPhoneNumber }}
+                                </div>
+                                <div>
+                                    {{ workOpportunity.shipperDetails.shipperEmailAddress }}
+                                </div>
+                            </div>
+                        </div>
+                    </mat-expansion-panel>
+                </div>
+        </div>
+    </div>
+</div>

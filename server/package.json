@@ -4,18 +4,32 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "npx nodemon server.js",
+    "authServer": "npx nodemon authServer.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "base64topdf": "^1.1.8",
     "body-parser": "^1.19.0",
     "colors": "^1.4.0",
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
+    "dotenv": "^8.6.0",
     "express": "^4.17.1",
     "express-validator": "^6.9.2",
+    "filereader": "^0.10.3",
+    "js-base64": "^3.6.1",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.16",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "multer": "^1.4.2",
+    "nodemon": "^2.0.7",
+    "pdf-viewer": "^0.8.1",
+    "twilio": "^3.63.1",
+    "unirest": "^0.6.0",
+    "validate-vat": "^0.7.0",
+    "validate-vat-ts": "^1.2.0"
   }
 }

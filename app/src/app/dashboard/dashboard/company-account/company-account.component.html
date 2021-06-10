@@ -1,0 +1,115 @@
+<div class="main">
+    <div class="container">
+        <p>Company Details</p>
+        <mat-card class="row">
+            <div>
+                Company Name
+            </div>
+            <div>
+                {{ companyProfile.companyDetails.companyLegalName }}
+            </div>
+        </mat-card>
+
+        <mat-card class="row">
+            <div>
+                Company type
+            </div>
+            <div>
+                {{ companyProfile.companyDetails.companyType }}
+            </div>
+        </mat-card>
+
+        <mat-card class="row">
+            <div>
+                Country
+            </div>
+            <div>
+                {{ companyProfile.companyDetails.countryName }}
+            </div>
+        </mat-card>
+
+        <mat-card class="row">
+            <div>
+                City
+            </div>
+            <div>
+                {{ companyProfile.companyDetails.city }}
+            </div>
+        </mat-card>
+        
+        <mat-card class="row">
+            <div>
+                Address
+            </div>
+            <div>
+                {{ companyProfile.companyDetails.addressLine1 }}
+            </div>
+        </mat-card>
+
+        <mat-card class="row">
+            <div>
+                Postcode
+            </div>
+            <div>
+                {{ companyProfile.companyDetails.postcode }}
+            </div>
+        </mat-card>
+        
+        <mat-card class="row">
+            <div>
+                VAT Number
+            </div>
+            <div>
+                {{ companyProfile.companyDetails.vatNumber }}
+            </div>
+        </mat-card>
+
+        <mat-card class="row">
+            <div>
+                Company email address
+            </div>
+            <div>
+                {{ companyProfile.emailAddress }}
+            </div>
+        </mat-card>
+
+        <mat-card class="row">
+            <div>
+                Phone number
+            </div>
+            <div>
+                {{ companyProfile.companyDetails.phoneNumber }}
+            </div>
+        </mat-card>    
+    </div>
+
+    <div class="container">
+        <p>Payment Details</p>
+        <mat-card class="row">
+            <div>
+                Account holder name
+            </div>
+            <div>
+                {{ companyProfile.paymentDetails.accountHolderName }}
+            </div>
+        </mat-card>
+
+        <mat-card class="row">
+            <div>
+                IBAN number
+            </div>
+            <div>
+                {{ companyProfile.paymentDetails.ibanNumber }}
+            </div>
+        </mat-card>
+
+        <mat-card class="row">
+            <div>
+                Swift code
+            </div>
+            <div>
+                {{ companyProfile.paymentDetails.swiftBicCode }}
+            </div>
+        </mat-card>
+    </div>
+</div>

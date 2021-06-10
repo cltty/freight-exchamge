@@ -1,3 +1,9 @@
+$material-purple: #3f51b5;
+$material-red: #f44336;
+$white: #F0F0F0;
+$shadow-color: #404040;
+$green: #2eb82e;
+
 .stepper-container {
     border: 1px solid #F0F0F0;
     padding-bottom: 40px;
@@ -46,15 +52,80 @@
         &--domiciles {
             width: 380px;
         }
+
+        &--address-line-2 {
+            width: 380px;            
+        }
+
+        &--postcode {
+            width: 380px;
+        }
     }
 
     &__stepper-two {
+        &--header {
+            display: flex;
+            flex-direction: row;
+            margin-top: 30px;
+        
+            &-left {
+                display: flex;
+                flex-direction: row;
+                margin: auto;
 
+                p:nth-child(1) {
+                    margin-right: 160px;
+                }
+            }
+
+            &-right {
+                display: flex;
+                flex-direction: row;
+                margin: auto;
+
+                p:nth-child(1) {
+                    margin-right: 160px;
+                }
+            }
+        }
+
+        &--body {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+
+            &-left {
+                display: flex;
+                flex-direction: column;
+                margin: auto;
+                
+                .eq-inv-input-field {
+                    display: flex;
+                    flex-direction: row;
+                    
+                    p {
+                        margin-top: 20px;
+                        width: 160px;
+                    }
+                }
+            }
+
+            &-right {
+                margin: auto;
+                .eq-inv-input-field {
+                    display: flex;
+                    flex-direction: row;
+                    
+                    p {
+                        margin-top: 20px;
+                        width: 160px;
+                    }
+                }
+            }
+        }
     }
 
-    &__stepper-three {
-
-    }
+   
 }
 
 .left-column {
@@ -65,4 +136,175 @@
         display: flex;
         flex-direction: row;
     }
+}
+
+.insurance-form {
+    width: 500px;
+    margin: auto;
+
+    &__header {
+        span {
+            p:nth-child(1) {                
+                font-size: 22px;
+                font-weight: 500;
+            }
+        }
+    }
+
+    &__body {
+        .uploaded-files-container {
+            // width: 300px;
+
+            &__item {
+                background: $material-purple;
+                border-radius: 6px;
+                width: 300px;
+                margin-bottom: 12px;
+
+                &:hover {
+                    width: 315px;
+                    box-shadow: 0px 5px 40px -10px $shadow-color;
+
+                    p {
+                        letter-spacing: 3px;
+                        color: $white;
+                        transition: all 0.3s ease 0s;
+                    }
+
+                    transition: all 0.3s ease 0s;
+                }
+                span {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                
+                    p {
+                        font-weight: 500;
+                        margin: 12px 12px 12px;
+                    }
+
+                    mat-icon {
+                        color: $white;
+
+                        &:hover {
+                            transition: all 0.2s ease-in-out;
+                            transform: rotate3d(0, 0, 1, -360deg);
+                            color: $material-red;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.operating-license-form {
+    width: 500px;
+    margin: auto;
+
+    &__body {
+        .operating-license-container {
+            // width: 300px;
+
+            &__header {
+                // color: $green;
+            }
+
+            &__item {
+                background: $material-purple;
+                border-radius: 6px;
+                width: 300px;
+                margin-bottom: 12px;
+
+                &:hover {
+                    width: 315px;
+                    box-shadow: 0px 5px 40px -10px $shadow-color;
+
+                    p {
+                        letter-spacing: 3px;
+                        color: $white;
+                        transition: all 0.3s ease 0s;
+                    }
+
+                    transition: all 0.3s ease 0s;
+                }
+                span {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                
+                    p {
+                        font-weight: 500;
+                        margin: 12px 12px 12px;
+                    }
+
+                    mat-icon {
+                        color: $white;
+
+                        &:hover {
+                            transition: all 0.2s ease-in-out;
+                            transform: rotate3d(0, 0, 1, -360deg);
+                            color: $material-red;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.payment-form {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    margin: auto;
+}
+
+.container-not-empty {
+    border: 2px dashed lightgray;
+}
+
+.hide {
+    display: none;
+}
+
+.color-green {
+    color: $green;
+}
+
+.payment-input-field {
+    width: 280px;
+}
+
+.done-container {
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+
+    p {
+        margin: auto;
+        padding-bottom: 20px;
+    }
+
+    button {
+        width: 300px;
+        margin: auto;
+    }
+
+    div {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: row;
+    }
+}
+
+.main-with-no-background {
+    display: none;
+}
+
+.spinner {
+    display: flex;
+    justify-content: center;
+    transition:all 0.5s ease;
 }

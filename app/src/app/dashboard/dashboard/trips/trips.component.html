@@ -1,0 +1,99 @@
+<div class="main">
+    <div *ngIf="companyType === 'Shipper'" class='header'>
+            <div>Created loads</div>
+            <div>
+                <mat-icon (click)='onAddLoad()'>add_circle_outline</mat-icon>
+            </div>
+    </div>
+
+    <div *ngIf="companyType === 'Carrier'" class='header'>
+        <div>My loads</div>    
+    </div>
+
+    <div class="work-opportunities">
+        <div class="work-opportunities" *ngFor="let workOpportunity of loads;let i = index">
+            <div class="work-opportunity">
+                <mat-expansion-panel hideToggle [ngClass]="workOpportunity.cancelled || workOpportunity.rejected ? 'cancelled-trip' : ''">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title class="panel-title">
+                            <div class="origin">
+                                <div class="origin__name">
+                                    {{ workOpportunity.origin.city }}
+                                </div>
+                                <div class="origin__arrival">
+                                    {{ workOpportunity.origin.arrival }}
+                                </div>
+                            </div>
+
+                            <div class="origin">
+                                <div class="origin__name">
+                                    {{ workOpportunity.destination.city }}
+                                </div>
+                                <div class="origin__arrival">
+                                    {{ workOpportunity.destination.arrival }}
+                                </div>
+                            </div>
+                        </mat-panel-title>
+                        <mat-panel-description class="panel-description">
+                            <div class="distance">
+                                <p>{{ workOpportunity.distance }} km</p>
+                            </div>
+                            <div class="equipment">
+                                <div>
+                                    {{ workOpportunity.equipment.equipment }}
+                                </div>
+                                <div>
+                                    {{ workOpportunity.isRequired ? 'Required' : 'Not required' }}
+                                </div>
+                            </div>
+                            <div class="price">
+                                <div>
+                                    {{ workOpportunity.payout }} €
+                                </div>
+                            </div>
+                            <div class="action-btn">
+                                <div class="cancelled-rejected">
+                                    <p *ngIf="workOpportunity.cancelled">Cancelled</p>
+                                    <p *ngIf="workOpportunity.rejected">Rejected</p>
+                                </div>
+                                <button *ngIf="(!workOpportunity.rejected && !workOpportunity.cancelled) && companyType==='Carrier'" mat-raised-button color="warn" (click)="rejectLoad(i);$event.stopPropagation()">Reject</button>
+                                <button *ngIf="(!workOpportunity.rejected && !workOpportunity.cancelled) && companyType==='Shipper'" mat-raised-button color="warn" (click)="cancelLoad(i);$event.stopPropagation()">Cancel</button>
+                            </div>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div class="details">
+                        <div class="shipper-info">
+                            <div>
+                                Shipper information
+                            </div>
+                            <div>
+                                {{ workOpportunity.shipperDetails.shipperName }}
+                            </div>
+                            <div>
+                                {{ workOpportunity.shipperDetails.shipperEmailAddress }}
+                            </div>
+                            <div>
+                                {{ workOpportunity.shipperDetails.shipperPhoneNumber }}
+                            </div>
+                        </div>
+                        <!-- <button>Debug</button> -->
+
+                        <div *ngIf="workOpportunity.booked.isBooked" class="carrier-info">
+                            <div>
+                                Carrier information
+                            </div>
+                            <div>
+                                {{ workOpportunity.booked.carrierCompanyLegalName }}
+                            </div>
+                            <div>
+                                {{ workOpportunity.booked.carrierEmailAddress }}
+                            </div>
+                            <div>
+                                {{ workOpportunity.booked.carrierPhoneNumber }}
+                            </div>
+                        </div>
+                    </div>
+                </mat-expansion-panel>
+            </div>
+    </div>
+</div>

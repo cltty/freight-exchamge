@@ -1,28 +1,29 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
  
-/*
- * Logic for generating uniqueID
- */
-
-
 const userSchema = new Schema(
     {
-        uniqueID: {
-            type: String,
-            required: false
-        },
         emailAddress: {
             type: String,
-            required: true
+            required: true,
+            unique : true
         },
         password: {
             type: String,
             required: true
         },
-        accountType: {
+        temporaryBanned: {
             type: String,
             required: false
+        },
+        companyType: {
+            type: String,
+            required: false
+        },
+        createdAt: {
+            type: Date,
+            required: true,
+            default: Date.now
         }
     }
 );

@@ -1,0 +1,145 @@
+@import '../../../../styles.scss';
+
+.top-section {
+    margin-top: 60px;
+    margin-bottom: 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    &__left {
+        display: flex;
+        flex-direction: column;
+
+        p {
+            font-weight: 700;
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        mat-radio-button:nth-child(1) {
+            margin-right: 10px;
+        }
+
+        mat-radio-button {
+            font-weight: 500;
+            font-size: 18px;
+        }
+    }
+
+    &__right {
+        font-weight: 700;
+        font-size: 24px;
+    }
+}
+
+.bottom-section {
+    width: 80vw;
+    margin: auto;
+
+
+
+    &__loads {
+        margin-bottom: 20px;
+        
+        &:hover {
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+            transition: all 0.3s ease 0s;
+        }
+    }
+
+    &__reports {
+        &:hover {
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+            transition: all 0.3s ease 0s;
+        }
+    }
+}
+
+.load-panel-content {
+    &__header {
+        mat-radio-button:nth-child(1) {
+            margin-right: 10px;
+        }
+    }
+
+    &__body {
+
+    }
+}
+
+
+.work-opportunities {
+    .work-opportunity {
+        margin-bottom: 20px;
+       
+        &:hover {
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+            transition: all 0.3s ease 0s;
+        }
+    }
+}
+
+.panel-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 150px;
+
+    p:nth-child(1) {
+        font-weight: 600;
+        font-size: 18px;
+    }
+
+    .origin {
+        display: flex;
+        flex-direction: column;
+        margin-right: 55px;
+        &__name {
+            font-weight: 700;
+        }
+
+        &__arrival {
+            font-size: 12px;
+        }
+    }
+}
+
+.panel-description {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .distance {
+        color: black;
+        margin-top: 10px;
+        font-weight: 400;
+    }
+
+    .equipment {
+        display: flex;
+        flex-direction: column;
+
+        div:nth-child(1) {
+            color: black;
+            font-weight: 400;
+        }
+    }
+
+    .price {
+        margin-top: 10px;
+        color: $money-green;
+        font-weight: 700;
+    }
+
+    .action-btn {
+        margin-top: 5px;
+        
+        button:hover {
+            background-color: $money-green;
+            color: black;
+            transition: all 0.3s ease 0s;
+        }
+    }
+
+}

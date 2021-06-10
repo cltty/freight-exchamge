@@ -1,0 +1,69 @@
+.origin-section {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    margin-bottom: 20px;
+
+    &__title {
+        font-weight: 400;
+        font-size: 20px;
+    }
+
+    &__input-section {
+        display: flex;
+        flex-direction: row;
+
+        &--left {
+            display: flex;
+            flex-direction: column;
+            margin-right: 40px;
+        }
+
+        &--right {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}
+
+.distance-section {
+    margin-bottom: 20px;
+
+    &__title {
+        font-weight: 400;
+        font-size: 20px;
+    }
+}
+
+.distance-payout-section {
+    display: flex;
+    flex-direction: row;
+
+}
+
+.distance-payout__left {
+    margin-right: 40px;
+}
+
+.equipment-section {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+
+    &__title {
+        font-weight: 400;
+        font-size: 20px;
+    }
+
+    &__input-section {
+        &--left {
+            margin-right: 40px;
+        }
+    }
+
+}
+
+
+mat-form-field {
+    width: 260px;
+}

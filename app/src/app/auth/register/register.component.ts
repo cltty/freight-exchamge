@@ -32,7 +32,7 @@ export class RegisterComponent implements OnInit {
     private formBuilder: FormBuilder
   ) { 
     this.registerForm = this.formBuilder.group({
-      name: new FormControl('', [Validators.required, CustomValidators.forbiddenCharacters()]),
+      /* name: new FormControl('', [Validators.required, CustomValidators.forbiddenCharacters()]), */
       emailAddress: new FormControl('', [Validators.email, Validators.required]),
       password: new FormControl('', [Validators.required, CustomValidators.forbiddenCharacters()]),
       repeatPassword: new FormControl('', [Validators.required, CustomValidators.forbiddenCharacters()]),
@@ -49,9 +49,9 @@ export class RegisterComponent implements OnInit {
     return this.registerForm.controls;
   }
 
-  get name() {
-    return this.registerForm.get('name');
-  }
+  // get name() {
+  //   return this.registerForm.get('name');
+  // }
 
 
   get emailAddress() {
@@ -64,11 +64,6 @@ export class RegisterComponent implements OnInit {
 
   get repeatPassword() {
     return this.registerForm.get('repeatPassword');
-  }
-
-  public test() {
-    console.log("test()");
-    console.log("repeatPassword.errors : ", this.registerForm.errors);
   }
 
   private isFormValid(form: FormGroup) {
@@ -92,11 +87,23 @@ export class RegisterComponent implements OnInit {
         this.hideForm = true;
       }, 1000);
       //submit to BE
-    
+
+      const requestPayload = {
+        uniqueID: this.computeUniqueID(),
+        emailAddress: this.emailAddress.value,
+        password: this.password.value
+      }
+
+      this.authService.createUser(requestPayload)
+      .pipe(takeUntil(this.componentDestroyed$))
+      .subscribe(response => {
+        console.log("createUser response : ", response);
+      });
+
       // this.authService.signup()
       //   .pipe(takeUntil(this.componentDestroyed$))
       //   .subscribe(response => {
-      //   console.log("authService.signup() => ", response)
+      //     console.log("authService.signup() => ", response)
       // });
     } else {
       console.log("FORM INVALID");
@@ -106,6 +113,10 @@ export class RegisterComponent implements OnInit {
 
 
     //POST http call
+  }
+
+  public computeUniqueID() {
+    return 'uniqueID';
   }
 
   ngOnDestroy() {

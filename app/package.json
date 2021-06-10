@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --proxy-config proxy.conf.json",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -21,8 +21,18 @@
     "@angular/platform-browser": "~9.1.4",
     "@angular/platform-browser-dynamic": "~9.1.4",
     "@angular/router": "~9.1.4",
+    "angular-iban": "^4.0.2",
+    "angular-material-fileupload": "^3.0.2",
+    "bic": "^1.1.1",
+    "cities.json": "^1.1.5",
+    "form-data": "^4.0.0",
+    "iban": "0.0.14",
+    "ng2-pdf-viewer": "^6.4.1",
+    "ngx-captcha": "^9.0.1",
+    "postcode-validator": "^3.3.0",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
+    "validate-vat-ts": "^1.2.0",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {

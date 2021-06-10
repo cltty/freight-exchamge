@@ -1,5 +1,5 @@
 <div class="main">
-   <form class="login-form">
+   <form class="login-form" [formGroup]="loginForm">
         <mat-form-field class="example-full-width login-form__input-field">
             <mat-label>
                 Email address
@@ -22,10 +22,21 @@
                 Password is <strong>required</strong>
             </mat-error>
         </mat-form-field>
+        <ngx-recaptcha2 #captchaElem
+            [siteKey]="siteKey"
+            (reset)="handleReset()"
+            (expire)="handleExpire()"
+            (load)="handleLoad()"
+            (success)="handleSuccess($event)"
+            formControlName="recaptcha">
+        </ngx-recaptcha2>
+        <mat-error *ngIf="wrongCredentials">
+            Wrong <strong>email address</strong> or <strong>password</strong> used!
+        </mat-error>
         <button mat-raised-button class="login-form__btn" color="primary" (click)="submitForm()">Login</button>
     </form>
 
-    <div class="info-container">
+    <!-- <div class="info-container">
         <p>
             By signing in or creating an account, you agree to the <a href="#">Freight Exchange Terms</a>
         </p>
@@ -38,6 +49,6 @@
         </p>
         
         <button mat-raised-button class="info-container__btn" color="primary" (click)="redirectToRegister()">Create your Freight Exchange Account</button>
-    </div>
+    </div> -->
 
 </div>

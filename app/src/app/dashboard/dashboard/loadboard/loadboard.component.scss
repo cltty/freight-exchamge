@@ -1,0 +1,112 @@
+@import '../../../../styles.scss';
+
+$money-green:#118C4F;
+
+.main {
+    // noth
+}
+
+.top-section {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+
+    .input-wrapper {
+        margin-left: 40px;
+    }
+}
+
+.bottom-section {
+    width: 80vw;
+    margin: auto;
+
+    .action-btns-container {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+    }
+
+    .work-opportunities {
+        .work-opportunity {
+            margin-bottom: 20px;
+           
+            &:hover {
+                box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+                transition: all 0.3s ease 0s;
+            }
+        }
+    }
+}
+
+.mat-form-field + .mat-form-field {
+    margin-left: 8px;
+}
+
+
+.panel-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 150px;
+
+    .origin {
+        display: flex;
+        flex-direction: column;
+        margin-right: 55px;
+        &__name {
+            font-weight: 700;
+        }
+
+        &__arrival {
+            font-size: 12px;
+        }
+    }
+}
+
+.panel-description {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .distance {
+        color: black;
+        margin-top: 10px;
+        font-weight: 400;
+    }
+
+    .equipment {
+        display: flex;
+        flex-direction: column;
+
+        div:nth-child(1) {
+            color: black;
+            font-weight: 400;
+        }
+    }
+
+    .price {
+        margin-top: 10px;
+        color: $money-green;
+        font-weight: 700;
+    }
+
+    .action-btn {
+        margin-top: 5px;
+        
+        button:hover {
+            background-color: $money-green;
+            color: black;
+            transition: all 0.3s ease 0s;
+        }
+    }
+
+}
+
+mat-icon {
+    cursor: pointer;
+    &:hover {
+        transition: all 0.2s ease-in-out;
+        transform: rotate3d(0, 0, 1, -360deg);
+        color: $material-red;
+    }
+}

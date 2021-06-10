@@ -1,0 +1,65 @@
+<div class="main">
+    <div class='header'>
+        <div *ngIf="unreadNotifications?.length > 1">{{ unreadNotifications?.length }} unread notifications!</div>
+        <div *ngIf="unreadNotifications?.length === 1">{{ unreadNotifications?.length }} unread notification!</div>
+        <div *ngIf="unreadNotifications?.length === 0">Nothing new!</div>    
+    </div>
+
+    <div class="work-opportunities">
+        <div class="work-opportunities" *ngFor="let unreadNotification of unreadNotifications;let i = index">
+            <div class="work-opportunity">
+                <mat-expansion-panel hideToggle>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title class="panel-title">
+                            <div>
+                                <p>{{ i + 1 }}.</p>
+                                <p>{{ unreadNotification.createdAt }}</p>
+                            </div>
+                        </mat-panel-title>
+                        <mat-panel-description class="panel-description">
+                            <div class="message">
+                                {{ unreadNotification.message }}
+                            </div>
+                            <div class="action-btn">
+                                <button *ngIf="companyType === 'Carrier'" mat-raised-button color="warn" (click)="reportShipper(i);$event.stopPropagation()">Report Shipper</button>
+                                <button *ngIf="companyType === 'Shipper'" mat-raised-button color="warn" (click)="reportCarrier(i);$event.stopPropagation()">Report Carrier</button>
+                                
+                                <button mat-raised-button color="primary" (click)="markAsRead(i);$event.stopPropagation()">Mark As Read</button>
+                            </div>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div class="details">
+                        <div *ngIf="companyType === 'Carrier'" class="shipper-info">
+                            <div>
+                                Shipper information
+                            </div>
+                            <div>
+                                {{ unreadNotification.from.companyLegalName }}
+                            </div>
+                            <div>
+                                {{ unreadNotification.from.companyEmailAddress }}
+                            </div>
+                            <div>
+                                {{ unreadNotification.from.companyPhoneNumber }}
+                            </div>
+                        </div>
+
+                        <div *ngIf="companyType === 'Shipper'" class="carrier-info">
+                            <div>
+                                Carrier information
+                            </div>
+                            <div>
+                                {{ unreadNotification.for.companyLegalName }}
+                            </div>
+                            <div>
+                                {{ unreadNotification.for.companyEmailAddress }}
+                            </div>
+                            <div>
+                                {{ unreadNotification.for.companyPhoneNumber }}
+                            </div>
+                        </div>
+                    </div>
+                </mat-expansion-panel>
+            </div>
+    </div>
+</div>

@@ -1,0 +1,127 @@
+<h2 mat-dialog-title>Create new load</h2>
+<mat-dialog-content class="mat-typography" [formGroup]="newLoadForm">
+  <div class="origin-section">
+    <div class="origin-section__title">
+      <p>Origin</p>
+    </div>
+
+    <div class="origin-section__input-section">
+      <div class="origin-section__input-section--left">
+        <mat-form-field>
+          <mat-label>City</mat-label>
+          <input (input)="inputChange($event, 'originCity')" matInput formControlName="originCity">
+        </mat-form-field>
+    
+        <mat-form-field >
+          <mat-label>Country</mat-label>
+          <input (input)="inputChange($event, 'originCountry')" matInput formControlName="originCountry">
+        </mat-form-field>
+      </div>
+
+      <div class="origin-section__input-section--right">
+        <mat-form-field >
+          <mat-label>Zipcode</mat-label>
+          <input (input)="inputChange($event, 'originZipcode')" matInput formControlName="originZipcode">
+        </mat-form-field>
+        
+        <mat-form-field >
+          <mat-label>Arrival</mat-label>
+          <input (input)="inputChange($event, 'originArrival')" matInput formControlName="originArrival">
+        </mat-form-field>    
+      </div>
+    </div>
+  </div>
+
+
+  <div class="origin-section">
+    <div class="origin-section__title">
+      <p>Destination</p>
+    </div>
+
+    <div class="origin-section__input-section">
+      <div class="origin-section__input-section--left">
+        <mat-form-field>
+          <mat-label>City</mat-label>
+          <input (input)="inputChange($event, 'destinationCity')" matInput formControlName="destinationCity">
+        </mat-form-field>
+    
+        <mat-form-field >
+          <mat-label>Country</mat-label>
+          <input (input)="inputChange($event, 'destinationCountry')" matInput formControlName="destinationCountry">
+        </mat-form-field>
+      </div>
+
+      <div class="origin-section__input-section--right">
+        <mat-form-field >
+          <mat-label>Zipcode</mat-label>
+          <input (input)="inputChange($event, 'destinationZipcode')" matInput formControlName="destinationZipcode">
+        </mat-form-field>
+        
+        <mat-form-field >
+          <mat-label>Arrival</mat-label>
+          <input (input)="inputChange($event, 'destinationArrival')" matInput formControlName="destinationArrival">
+        </mat-form-field>    
+      </div>
+    </div>
+  </div>
+
+  <div class="distance-payout-section">
+    <div class="distance-payout__left">
+      <div class="distance-section__title">
+        <p>Distance</p>
+      </div>
+      <div class="distance-section__input-section">
+        <mat-form-field >
+          <mat-label>Distance</mat-label>
+          <input (input)="inputChange($event, 'distance')" matInput formControlName="distance">
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="distance-payout__right">
+      <div class="distance-section">
+        <div class="distance-section__title">
+          <p>Payout</p>
+        </div>
+        <mat-form-field class="distance-section__input-section">
+          <mat-label>Payout</mat-label>
+          <input (input)="inputChange($event, 'payout')" matInput formControlName="payout">
+        </mat-form-field>    
+      </div>
+    </div>
+
+        
+  </div>
+
+
+  <div class="equipment-section">
+      <div class="equipment-section__title">
+        <p>Equipment</p>
+      </div>
+    
+      <div class="equipment-section__input-section">
+        <mat-form-field class="equipment-section__input-section--left">
+          <mat-label>Equipment</mat-label>
+          <mat-select formControlName="equipment" single (selectionChange)="inputChangeEquipment($event, 'equipment')">
+            <mat-option *ngFor="let equipment of equipmentTypes" [value]="equipment">
+              {{ equipment }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+    
+        <mat-form-field >
+          <mat-label>Required</mat-label>
+          <mat-select formControlName="isEquipmentRequired" single (selectionChange)="inputChangeEquipment($event, 'isEquipmentRequired')">
+            <mat-option *ngFor="let option of isEquipmentRequiredOptions" [value]="option">
+              {{ option }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+  </div>
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial [disabled]="isFormValid() ? false : true" (click)="onSubmit()">Create</button>
+</mat-dialog-actions>
