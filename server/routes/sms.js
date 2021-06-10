@@ -12,9 +12,9 @@ router.post('/', (req, res) => {
     console.log("Sending SMS...");
     client.messages
     .create({
-        body: "Dummy Message",
+        body: req.body.message,
         from: '+15622685702',
-        to: "+40742631780"
+        to: req.body.to
     })
     .then(message => {
         console.log(message.sid);
@@ -24,5 +24,3 @@ router.post('/', (req, res) => {
         res.status(500).json(err.message);
     });
 });
-
-// 40742631780
