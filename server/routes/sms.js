@@ -6,7 +6,7 @@ module.exports = router;
 const dotenv = require('dotenv').config();
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
-const client = require('twilio')('ACc64dd4ed71a1e23de972f08fb5ff08e3', 'd7ece995f6af7a6649694221284cc9e7');
+const client = require('twilio')(accountSid, authToken);
 
 router.post('/', (req, res) => {
     console.log("Sending SMS...");
@@ -24,3 +24,5 @@ router.post('/', (req, res) => {
         res.status(500).json(err.message);
     });
 });
+
+// 40742631780
