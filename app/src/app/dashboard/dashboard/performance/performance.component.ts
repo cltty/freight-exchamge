@@ -144,11 +144,6 @@ export class PerformanceComponent implements OnInit, OnDestroy {
       this.changeReportsPeriod(event.value);
     }
   }
-  
-  public debug() {
-    console.log(this.defaultPeriod);
-    console.log("Selected : ", this.selectedRadio);
-  }
 
   public ngOnDestroy() {
     this.componentDestroyed$.next();

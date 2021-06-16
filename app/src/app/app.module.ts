@@ -49,6 +49,11 @@ import { ReportShipperComponent } from './common/dialogs/report-shipper/report-s
 import { MarkAsReadDialogComponent } from './common/dialogs/mark-as-read-dialog/mark-as-read-dialog.component';
 import { ReportCarrierComponent } from './common/dialogs/report-carrier/report-carrier.component';
 import { LogoutDialogComponent } from './common/dialogs/logout-dialog/logout-dialog.component';
+import { LoadBookedDialogComponent } from './common/dialogs/load-booked-dialog/load-booked-dialog.component';
+import { LoadBookFailedDialogComponent } from './common/dialogs/load-book-failed-dialog/load-book-failed-dialog.component';
+import { RegisterSucessfulDialogComponent } from './common/dialogs/register-sucessful-dialog/register-sucessful-dialog.component';
+import { CommonDialogComponent } from './common/dialogs/common-dialog/common-dialog.component';
+import { NotificationDialogComponent } from './common/dialogs/notification-dialog/notification-dialog.component';
 
 @NgModule({
   declarations: [
@@ -73,7 +78,12 @@ import { LogoutDialogComponent } from './common/dialogs/logout-dialog/logout-dia
     ReportShipperComponent,
     MarkAsReadDialogComponent,
     ReportCarrierComponent,
-    LogoutDialogComponent
+    LogoutDialogComponent,
+    LoadBookedDialogComponent,
+    LoadBookFailedDialogComponent,
+    RegisterSucessfulDialogComponent,
+    CommonDialogComponent,
+    NotificationDialogComponent
   ],
   imports: [
     BrowserModule,

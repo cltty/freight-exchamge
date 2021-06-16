@@ -352,21 +352,11 @@ export class CreateProfileComponent implements OnInit {
   }
 
   public submitProfile() {
-    // console.log("Submit profile");
-    // this.displaySpinner = true;
-
-    // setTimeout(() => {
-    //   this.displaySpinner = false;
-    // }, 1000);
-
-    console.log("submitProfile-->> this.isReadyForSubmit() -->> ", this.isReadyForSubmit());
-
     if (this.isReadyForSubmit()) {
       const profilePayload = this.computePayload();
-      console.log("profilePayload -> ", profilePayload);
+      
       switch(this.companyType.value) {
         case 'Shipper':
-          console.log("-> case shipper");
           this.userService.createShipperProfile(profilePayload)
             .pipe(takeUntil(this.componentDestroyed$))
             .subscribe(response => {
@@ -379,12 +369,9 @@ export class CreateProfileComponent implements OnInit {
           });
         break;
         case 'Carrier':
-          console.log("-> case carrier");
           this.userService.createCarrierProfile(profilePayload)
             .pipe(takeUntil(this.componentDestroyed$))
             .subscribe(response => {
-              console.log(">> userService.createCarrierProfile >> ", response);
-                // if success -> upload documents
                 if (response === 'Error') {
                    this.displayRequestError("HTTP ERROR"); 
                 }
@@ -402,6 +389,8 @@ export class CreateProfileComponent implements OnInit {
     }
   }
 
+// TO DO
+
 
   public displayRequestError(errorMessage: string) {
     console.log("displayRequestErrorModal() -> ", errorMessage);
@@ -417,7 +406,6 @@ export class CreateProfileComponent implements OnInit {
 
   public toggleInsuranceDocumentsStepper() {
     this.displayInsuranceDocumentsStepper = !this.displayInsuranceDocumentsStepper;
-    console.log("companyType.value !== 'Shipper' -> ", this.companyType.value !== 'Shipper');
   }
 
 
@@ -442,8 +430,6 @@ export class CreateProfileComponent implements OnInit {
     this.displayInvalidVatNumberError = true;
     this.invalidVatNumberError = error;
   }
-
-  // displayInvalidVatNumberError
 
   public checkFormForErrors() {
     this.checkVatNumber();

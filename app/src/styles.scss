@@ -2,6 +2,7 @@ $mat-primary-color: #3f51b5;
 $white: #ffffff;
 $material-red: #f44336;
 $money-green:#118C4F;
+$light-green: #90EE90;
 
 body {
     margin: 0px;
@@ -18,7 +19,12 @@ body {
     // background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(85,102,195,1) 100%);
 
     background: rgb(238,174,202);
-background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(94,111,199,1) 100%);
+    background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(94,111,199,1) 100%);
 }
+
+body.dialog-open {
+    overflow: hidden;
+}
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

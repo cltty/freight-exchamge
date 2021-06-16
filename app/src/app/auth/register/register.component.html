@@ -12,8 +12,7 @@
         <div class="header">
             <p>Create your account</p>
         </div>
-    
-        <form  class="login-form">
+        <form [formGroup]="registerForm" class="login-form">
             <!-- <mat-form-field class="example-full-width login-form__input-field">
                 <mat-label>
                     Your name
@@ -72,7 +71,20 @@
                     Passwords does not match!
                 </mat-error>
             </mat-form-field>
-             <button mat-raised-button class="login-form__btn" color="primary" (click)="submitForm()">Create your Freight Exchange Account</button>
+            <ngx-recaptcha2 #captchaElem
+                [siteKey]="siteKey"
+                (reset)="handleReset()"
+                (expire)="handleExpire()"
+                (load)="handleLoad()"
+                (success)="handleSuccess($event)"
+                formControlName="recaptcha">
+            </ngx-recaptcha2>
+             <button mat-raised-button class="login-form__btn" color="primary" 
+                [disabled]='emailAddress.errors
+                            || password.errors
+                            || repeatPassword.errors
+                            || recaptcha.errors'
+                (click)="submitForm()">Create your Freight Exchange Account</button>
          </form>
     
          <div class="info-container">
@@ -82,6 +94,9 @@
              </p>
          </div>
     </div>
+
+    <button (click)="failDialog()">failDialog</button>
+    <button (click)="displayDialog()">displayDialog</button>
 
     <div [ngClass]="!hideForm  || displaySpinner? 'blank-form' : 'signup-successful'">
         <span>
@@ -162,3 +177,4 @@
          </p>
      </div> -->
  </div>
+ <ng-template #dialog></ng-template>

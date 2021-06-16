@@ -1,12 +1,16 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CompanyProfile } from 'src/app/auth/create-profile/models/CompanyProfile';
+import { LoadBookFailedDialogComponent } from 'src/app/common/dialogs/load-book-failed-dialog/load-book-failed-dialog.component';
+import { LoadBookedDialogComponent } from 'src/app/common/dialogs/load-booked-dialog/load-booked-dialog.component';
+import { NotificationDialogComponent } from 'src/app/common/dialogs/notification-dialog/notification-dialog.component';
+import { DialogService } from 'src/app/services/dialog-service/dialog.service';
 import { UserService } from 'src/app/user-service/user.service';
 import { Load } from '../../models/load';
 import { DashboardService } from '../../service/dashboard.service';
-// import { cities } from "cities.json";
 
 @Component({
   selector: 'fx-loadboard',
@@ -14,6 +18,9 @@ import { DashboardService } from '../../service/dashboard.service';
   styleUrls: ['./loadboard.component.scss']
 })
 export class LoadboardComponent implements OnInit {
+  @ViewChild('dialog', { read: ViewContainerRef })
+  public dialogContainer: ViewContainerRef;
+
   @Input()
   public companyProfile: CompanyProfile;
 
@@ -24,45 +31,22 @@ export class LoadboardComponent implements OnInit {
     "Carrier"
   ];
 
-  // public dummyCities: any =  [
-  //   {
-  //     name: 'Iasi',
-  //     country: 'Ro',
-  //     lat: '45.0346',
-  //     lon: '53.0346'
-  //   },
-  //   {
-  //     name: 'Roman',
-  //     country: 'Ro',
-  //     lat: '45.0346',
-  //     lon: '53.0346'
-  //   },
-  //   {
-  //     name: 'Bacau',
-  //     country: 'Ro',
-  //     lat: '45.0346',
-  //     lon: '53.0346'
-  //   },
-  // ];
-
-  // public dummyWorkOpportunity: any = {
-  //   origin: "OSS",
-  //   originArrival: "Tue 1 Jun 17:00",
-  //   destination: "FRANKHENTAL",
-  //   destinationArrival: "Wed 2 Jun 23:30",
-  //   distance: "1.200km",
-  //   price: "1500$"
-  // };
-
   public companyType: string;
   public availableLoads: Load[] = [];
+
+  private closeDialogEmitterSubscription: Subscription;
+  private afirmativeAnswearDialogEmitterSubscription: Subscription;
+
 
   private componentDestroyed$: Subject<void> = new Subject<void>();
 
   constructor(
     private formBuilder: FormBuilder, 
     private dashboardService: DashboardService,
-    private userService: UserService) {
+    private userService: UserService,
+    private dialog: MatDialog,
+    private dialogService: DialogService
+    ) {
     this.searchCriteriaForm = this.formBuilder.group({
       origin: [''],
       destination: [''],
@@ -76,60 +60,136 @@ export class LoadboardComponent implements OnInit {
   }
 
   public getAllUnbookedLoads() {
-    // getAllAvailableLoads
     this.dashboardService.getAllAvailableLoads().pipe(takeUntil(this.componentDestroyed$)).subscribe(loads => {
       this.availableLoads = loads;
-      this.shortenArrivalDates();
     });
-    // this.dashboardService.getLoadsByBookedFlag(false).pipe(takeUntil(this.componentDestroyed$)).subscribe(loads => {
-    //   console.log("Loads => ", loads);
-    //   this.availableLoads = loads;
-    //   this.shortenArrivalDates();
-    //   console.log("availableLoads -> ", this.availableLoads);
-    // });
-  }
-
-  private shortenArrivalDates() {
-    this.availableLoads.forEach(load => {
-      load.origin.arrival = "02/06/2021";
-      load.destination.arrival = "03/06/2021"
-    })
-  }
-
-  displayFn(city): string {
-    return city && city.name ? city.name : '';
   }
 
   get companyLegalName() {
     return this.searchCriteriaForm.get('origin');
   }
 
-  public inputChangeSearchCriteriaForm($event: any, city: any) {
-    console.log('inputChangeSearchCriteriaForm');
+  public bookLoad(index: number) {
+    this.dashboardService
+      .bookLoad(this.availableLoads[index]._id, this.computeBookPayload())
+      .pipe(takeUntil(this.componentDestroyed$))
+      .subscribe(() => {
+        setTimeout(() => {
+          this.openLoadBookedDialog();
+          // const dialogRef = this.dialog.open(LoadBookedDialogComponent);
+
+          // dialogRef.afterClosed().pipe(takeUntil(this.componentDestroyed$)).subscribe(result => {
+          //   if (result) {
+          //     this.getAllUnbookedLoads();
+          //   }
+          // });
+          
+        }, 1000);
+      },
+      () => {
+        this.openLoadBookFailedDialog();
+        // const dialogRef = this.dialog.open(LoadBookFailedDialogComponent);
+        // dialogRef.afterClosed().pipe(takeUntil(this.componentDestroyed$)).subscribe(result => {
+        //   if (result) {
+        //     this.getAllUnbookedLoads();
+        //   }
+        // });
+      }
+    );
   }
 
-  public bookLoad(index: number) {
-    const bookPayload = {
+  private computeBookPayload() {
+    return {
       carrierId: this.userService.getUserId(),
       carrierCompanyLegalName: this.companyProfile.companyDetails.companyLegalName,
       carrierEmailAddress: this.companyProfile.emailAddress,
       carrierPhoneNumber: this.companyProfile.companyDetails.phoneNumber
     }
-    this.dashboardService
-      .bookLoad(this.availableLoads[index]._id, bookPayload)
-      .pipe(takeUntil(this.componentDestroyed$))
-      .subscribe(response => {
-        console.log("Book load response => ", response);
-        setTimeout(() => {
-          alert("Successfully booked!");
-          this.getAllUnbookedLoads();
-        }, 1000);
+  }
+
+  private openLoadBookedDialog() {
+    this.dialogService.showDialog(this.dialogContainer, NotificationDialogComponent, this.computeLoadBookedDialogInputs());
+
+    this.dialogService.closeEventEmitter().subscribe(() => {
+      this.dialogService.hideDialog([
+        this.closeDialogEmitterSubscription,
+        this.afirmativeAnswearDialogEmitterSubscription
+      ]);
+
+      this.getAllUnbookedLoads();  
+    });
+
+    this.dialogService.trueEventEmitter().subscribe(() => {
+      this.dialogService.hideDialog([
+        this.closeDialogEmitterSubscription,
+        this.afirmativeAnswearDialogEmitterSubscription
+      ]);
+
+      this.getAllUnbookedLoads();
+    });
+  }
+
+  private openLoadBookFailedDialog() {
+    this.dialogService.showDialog(this.dialogContainer, NotificationDialogComponent, this.computeLoadBookFailedDialogInputs());
+
+    this.dialogService.closeEventEmitter().subscribe(() => {
+      this.dialogService.hideDialog([
+        this.closeDialogEmitterSubscription,
+        this.afirmativeAnswearDialogEmitterSubscription
+      ]);
+
+      this.getAllUnbookedLoads();
+    });
+
+    this.dialogService.trueEventEmitter().subscribe(() => {
+      this.dialogService.hideDialog([
+        this.closeDialogEmitterSubscription,
+        this.afirmativeAnswearDialogEmitterSubscription
+      ]);
+
+      this.getAllUnbookedLoads();
+    });
+  }
+
+  private computeLoadBookedDialogInputs() {
+    return [
+      {
+        name: 'headerText',
+        value: 'Load successfully booked!'
       },
-      err => {
-        console.log("Book err -> ", err);
-        alert("Error: Load already booked!");
-      }
-      );
-    
+      {
+        name: 'displayCancel',
+        value: false
+      },
+      {
+        name: 'rightButtonText',
+        value: 'Ok'
+      },
+      {
+        name: 'displayAfirmative',
+        value: true
+      },
+    ];
+  }
+
+  private computeLoadBookFailedDialogInputs() {
+    return [
+      {
+        name: 'headerText',
+        value: 'Booking load failed! Please refresh.'
+      },
+      {
+        name: 'leftButtonText',
+        value: 'Ok'
+      },
+      {
+        name: 'displayCancel',
+        value: true
+      },
+      {
+        name: 'displayAfirmative',
+        value: false
+      },
+    ];
   }
 }

@@ -1,0 +1,12 @@
+<div class="modal" [@dialogAnimation]>
+    <div class="modal__container">
+        <div class="modal__container--header">
+            <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+        </div>
+
+        <div class="modal__container--content">
+            <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+        </div>
+    </div>
+</div>
+<div class="modal-background" [@modalBgFadeIn]></div>

@@ -1,9 +1,9 @@
 @import '../../../../styles.scss';
 
 mat-dialog-actions {
-    button:nth-child(2) {
+    button {
         &:hover {
-            color: $material-red;
+            color: $light-green;
         }
     }
 }

@@ -13,7 +13,7 @@
                         <mat-panel-title class="panel-title">
                             <div>
                                 <p>{{ i + 1 }}.</p>
-                                <p>{{ unreadNotification.createdAt }}</p>
+                                <p>{{ unreadNotification.createdAt | date: 'dd/MM/yyyy HH:mm' }}</p>
                             </div>
                         </mat-panel-title>
                         <mat-panel-description class="panel-description">
@@ -49,13 +49,13 @@
                                 Carrier information
                             </div>
                             <div>
-                                {{ unreadNotification.for.companyLegalName }}
+                                {{ unreadNotification.from.companyLegalName }}
                             </div>
                             <div>
-                                {{ unreadNotification.for.companyEmailAddress }}
+                                {{ unreadNotification.from.companyEmailAddress }}
                             </div>
                             <div>
-                                {{ unreadNotification.for.companyPhoneNumber }}
+                                {{ unreadNotification.from.companyPhoneNumber }}
                             </div>
                         </div>
                     </div>

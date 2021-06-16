@@ -44,29 +44,21 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }
 
   public reportShipper(index: number) {
-    console.log("reportShipper");
     const dialogRef = this.dialog.open(ReportShipperComponent);
 
     dialogRef.afterClosed().pipe(takeUntil(this.componentDestroyed$)).subscribe(result => {
       if (result) {
-        console.log("Reporting shipper...");
-        this.dashboardService.reportUser(this.computeReportShipperPayload(index)).subscribe(response => {
-          console.log("reportUser >> ", response);
-        });
+        this.dashboardService.reportUser(this.computeReportShipperPayload(index)).subscribe();
       }
     });
   }
 
   public reportCarrier(index: number) {
-    console.log("reportCarrier");
     const dialogRef = this.dialog.open(ReportShipperComponent);
 
     dialogRef.afterClosed().pipe(takeUntil(this.componentDestroyed$)).subscribe(result => {
       if (result) {
-        console.log("Reporting carrier...");
-        this.dashboardService.reportUser(this.computeReportCarrierPayload(index)).subscribe(response => {
-          console.log("reportUser >> ", response);
-        });
+        this.dashboardService.reportUser(this.computeReportCarrierPayload(index)).subscribe();
       }
     });
   }
@@ -108,14 +100,6 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       }
     }
   }
-
-  private computeMarkAsReadPayload() {
-    return "paylaod";
-  }
-
-  public shorten(x: any) {
-    return "22/05/2021";
-  } 
 
   public ngOnDestroy() {
     this.componentDestroyed$.next();

@@ -19,7 +19,7 @@
                                         {{ workOpportunity.origin.city }}
                                     </div>
                                     <div class="origin__arrival">
-                                        {{ workOpportunity.origin.arrival }}
+                                        {{ workOpportunity.origin.arrival | date: 'dd/MM/yyyy HH:mm' }}
                                     </div>
                                 </div>
     
@@ -28,7 +28,7 @@
                                         {{ workOpportunity.destination.city }}
                                     </div>
                                     <div class="origin__arrival">
-                                        {{ workOpportunity.destination.arrival }}
+                                        {{ workOpportunity.destination.arrival | date: 'dd/MM/yyyy HH:mm'}}
                                     </div>
                                 </div>
                             </mat-panel-title>
@@ -75,3 +75,4 @@
         </div>
     </div>
 </div>
+<ng-template #dialog></ng-template>

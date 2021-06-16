@@ -1,11 +1,13 @@
-import { HIGH_CONTRAST_MODE_ACTIVE_CSS_CLASS } from '@angular/cdk/a11y/high-contrast-mode/high-contrast-mode-detector';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { NotificationDialogComponent } from 'src/app/common/dialogs/notification-dialog/notification-dialog.component';
+import { RegisterSucessfulDialogComponent } from 'src/app/common/dialogs/register-sucessful-dialog/register-sucessful-dialog.component';
 import { CustomValidators } from 'src/app/common/validators/custom-validator';
+import { DialogService } from 'src/app/services/dialog-service/dialog.service';
 import { AuthService } from '../auth.service';
-// import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-register',
@@ -13,33 +15,35 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-  private componentDestroyed$: Subject<any> = new Subject();
+  @ViewChild('dialog', { read: ViewContainerRef })
+  public dialogContainer: ViewContainerRef;
+
+  public siteKey: string = '6Lf3OPwaAAAAACDAWgSCyUBOer_nSTTSjhY_ATyt';
   
   public registerForm: FormGroup;
   public displaySpinner: boolean = false;
   public hideForm: boolean = false;
   public spinnerText: string = "Please wait.."
   public signupSuccessfulMessage: string = "Sign up successful! You will redirected soon!"
-  
-  /**
-   * TO DO:
-   * checkbox validation
-   * spinner text animation
-   */
+
+  private closeDialogEmitterSubscription: Subscription;
+  private trueAnswearDialogEmitterSubscription: Subscription;
+
+  private componentDestroyed$: Subject<any> = new Subject();
 
   constructor(
     private authService: AuthService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private dialog: MatDialog,
+    private dialogService: DialogService
   ) { 
     this.registerForm = this.formBuilder.group({
-      /* name: new FormControl('', [Validators.required, CustomValidators.forbiddenCharacters()]), */
       emailAddress: new FormControl('', [Validators.email, Validators.required]),
       password: new FormControl('', [Validators.required, CustomValidators.forbiddenCharacters()]),
       repeatPassword: new FormControl('', [Validators.required, CustomValidators.forbiddenCharacters()]),
+      recaptcha: ['', Validators.required]
     });
   }
-
-  // enable button when form is valid
 
   ngOnInit(): void {
     console.log("Register comp!");
@@ -48,11 +52,6 @@ export class RegisterComponent implements OnInit {
   get fg(){
     return this.registerForm.controls;
   }
-
-  // get name() {
-  //   return this.registerForm.get('name');
-  // }
-
 
   get emailAddress() {
     return this.registerForm.get('emailAddress');
@@ -66,6 +65,10 @@ export class RegisterComponent implements OnInit {
     return this.registerForm.get('repeatPassword');
   }
 
+  get recaptcha() {
+    return this.registerForm.get('recaptcha');
+  }
+
   private isFormValid(form: FormGroup) {
     if (this.password.value !== this.repeatPassword.value) {
       this.repeatPassword.setErrors({ passwordsNotMatching: true });
@@ -75,29 +78,23 @@ export class RegisterComponent implements OnInit {
   }
 
   public submitForm() {
-    console.log("submitForm!");
-
     if (this.isFormValid(this.registerForm)) {
-      console.log("FORM VALID");
       this.displaySpinner = true;
-
 
       setTimeout(() => {
         this.displaySpinner = false;
         this.hideForm = true;
       }, 1000);
-      //submit to BE
 
-      const requestPayload = {
-        uniqueID: this.computeUniqueID(),
-        emailAddress: this.emailAddress.value,
-        password: this.password.value
-      }
-
-      this.authService.createUser(requestPayload)
+      this.authService.createUser(this.computeRequestPayload)
       .pipe(takeUntil(this.componentDestroyed$))
-      .subscribe(response => {
-        console.log("createUser response : ", response);
+      .subscribe(() => {
+        this.openSuccessDialog();
+        // const dialogRef = this.dialog.open(RegisterSucessfulDialogComponent);
+
+        // dialogRef.afterClosed().pipe(takeUntil(this.componentDestroyed$)).subscribe(result => {
+        //   // redirect
+        // });
       });
 
       // this.authService.signup()
@@ -108,15 +105,159 @@ export class RegisterComponent implements OnInit {
     } else {
       console.log("FORM INVALID");
     }
-
-    
-
-
     //POST http call
   }
 
-  public computeUniqueID() {
-    return 'uniqueID';
+  private computeRequestPayload() {
+    return {
+      // uniqueID: this.computeUniqueID(),
+      emailAddress: this.emailAddress.value,
+      password: this.password.value
+    };
+  }
+
+  public handleReset() {
+    console.log('handleReset');
+  }
+
+  public handleExpire() {
+    console.log('handleExpire');
+  }
+
+  public handleLoad() {
+    console.log('handleLoad');
+  }
+
+  public handleSuccess(event: any) {
+    console.log('handleSuccess');
+  }
+
+  public debug() {
+    console.log("Debug..");
+    console.log("Form erros : ", this.registerForm.errors);
+    console.log("this.emailAddress.errors : ", this.emailAddress.errors);
+  }
+
+  private openSuccessDialog() {
+    const inputs = [
+      {
+        name: 'headerText',
+        value: 'Successfully registered!'
+      },
+      {
+        name: 'displayCancel',
+        value: false
+      },
+      {
+        name: 'rightButtonText',
+        value: 'Ok'
+      },
+      {
+        name: 'displayAfirmative',
+        value: true
+      },
+    ]
+    this.dialogService.showDialog(this.dialogContainer, NotificationDialogComponent, inputs);
+
+     this.dialogService.closeEventEmitter().subscribe(() => {
+      this.dialogService.hideDialog([
+        this.closeDialogEmitterSubscription,
+        this.trueAnswearDialogEmitterSubscription
+      ]);
+      
+      console.log("> onClose > Redirecting to create-profile..");
+    });
+
+    this.dialogService.trueEventEmitter().subscribe(() => {
+      this.dialogService.hideDialog([
+        this.closeDialogEmitterSubscription,
+        this.trueAnswearDialogEmitterSubscription
+      ]);
+      console.log("> Redirecting to create-profile..");
+    });
+  }
+
+  private openFailDialog(errorMessage: string) {
+    console.log('openFailDialog');
+    const inputs = [
+      {
+        name: 'headerText',
+        value: errorMessage
+      },
+      {
+        name: 'leftButtonText',
+        value: 'Ok'
+      },
+      {
+        name: 'displayCancel',
+        value: true
+      },
+      {
+        name: 'displayAfirmative',
+        value: false
+      },
+    ]
+    this.dialogService.showDialog(this.dialogContainer, NotificationDialogComponent, inputs);
+
+     this.dialogService.closeEventEmitter().subscribe(() => {
+      this.dialogService.hideDialog([
+        this.closeDialogEmitterSubscription,
+        this.trueAnswearDialogEmitterSubscription
+      ]);
+      
+      console.log("> onClose > registerFailedDialog..");
+    });
+
+    this.dialogService.trueEventEmitter().subscribe(() => {
+      this.dialogService.hideDialog([
+        this.closeDialogEmitterSubscription,
+        this.trueAnswearDialogEmitterSubscription
+      ]);
+      console.log("> registerFailedDialog..");
+    });
+  }
+
+  public failDialog() {
+    console.log('failDialog');
+    this.openFailDialog('Email already address in use!');
+  }
+
+  public displayDialog() {
+    this.openSuccessDialog();
+    
+    // const inputs = [
+    //   {
+    //     name: 'headerText',
+    //     value: 'Successfully registered!'
+    //   },
+    //   {
+    //     name: 'leftButtonText',
+    //     value: 'Close'
+    //   },
+    //   {
+    //     name: 'rightButtonText',
+    //     value: 'Ok'
+    //   }
+    // ]
+    // this.dialogService.showDialog(this.dialogContainer, NotificationDialogComponent, inputs);
+
+    // this.dialogService.closeEventEmitter().subscribe(() => {
+    //   this.dialogService.hideDialog([
+    //     this.closeDialogEmitterSubscription//,
+    //     // this.trueAnswearDialogEmitterSubscription
+    //   ]);
+      
+    //   console.log("> onClose");
+    // });
+
+    // this.dialogService.trueEventEmitter().subscribe(() => {
+    //   this.dialogService.hideDialog([
+    //     this.closeDialogEmitterSubscription,
+    //     this.trueAnswearDialogEmitterSubscription
+    //   ]);
+    //   console.log("> onTrue");
+    // });
+
   }
 
   ngOnDestroy() {

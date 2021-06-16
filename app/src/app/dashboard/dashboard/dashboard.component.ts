@@ -53,8 +53,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.userService.toggleDefaultNavbar$.next(false);
   }
 
-  ngOnInit(): void {
-    // this.userId = this.userService.getUserId();
+  public ngOnInit(): void {
     this.dashboardService
       .getCompanyByUserId(this.userService.getUserId())
       .pipe(takeUntil(this.componentDestroyed$))
@@ -63,9 +62,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
 
-
   public onSideNavbarOptionClick(sideNavbarOption: any) {
-    console.log(">> onSideNavbarOptionClick >> sideNavbarOption : ", sideNavbarOption);
     this.currentActiveSection = sideNavbarOption;
   }
 
@@ -74,7 +71,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().pipe(takeUntil(this.componentDestroyed$)).subscribe(result => {
       if (result) {
-        console.log("loging  out...");
         this.authService.logoutUser().pipe(takeUntil(this.componentDestroyed$)).subscribe(() => {
           this.router.navigateByUrl(`/login`);
         });
@@ -82,14 +78,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
   
-
-  public debug() {
-    console.log("Debug..");
-    console.log("companyType -> ", this.userService.getCompanyType());
-    console.log("getCompanyByUserId");
-    console.log("Company profile -> ", this.companyProfile);
-  }
-
   public ngOnDestroy() {
     this.componentDestroyed$.next();
     this.componentDestroyed$.complete();

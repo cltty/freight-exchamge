@@ -1,0 +1,48 @@
+@import '../../../../styles.scss';
+
+.dialog-header {
+    display: flex;
+    flex-direction: row;
+
+    p {
+        font-size: 20px;
+        padding-top: 30px;
+        margin: auto;
+    }
+
+    mat-icon {
+        margin: 7px 7px 0px 0px;
+        cursor: pointer;
+
+        &:hover {
+            transition: all 0.2s ease-in-out;
+            transform: rotate3d(0, 0, 1, -360deg);
+            color: $material-red;
+        }
+    }
+}
+
+.dialog-action-btns {
+    display: flex;
+    justify-content: center;
+
+    button:nth-child(1) {
+        margin-right: 10px;
+    }
+
+    button:hover {
+        transition: all 0.2s ease-in-out;
+    }
+}
+
+.red-color {
+    &:hover {
+        color: $material-red;
+    }
+}
+
+.green-color {
+    &:hover {
+        color: $money-green;
+    }
+}

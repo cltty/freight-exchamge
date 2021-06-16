@@ -15,7 +15,6 @@ export class UserService {
   private readonly UPLOAD_OPERATING_LICENSE_URL: string = 'documents/operating-license';
   private readonly CREATE_CARRIER_COMPANY_PROFILE: string = 'carrier';
   private readonly CREATE_SHIPPER_COMPANY_PROFILE: string = 'shipper';
-  // private readonly GET_USER_BY_ID: string = `users/${id}`;
 
   public toggleDefaultNavbar$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 

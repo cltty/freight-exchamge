@@ -1,0 +1,30 @@
+<ng-template #customHeaderTemplate>
+    <div class="dialog-header">
+        <p>{{ headerText }}</p>
+        <mat-icon aria-hidden="false" aria-label="dialog-close" (click)="onClose()">close</mat-icon>
+    </div>
+</ng-template>
+
+<ng-template #customContentTemplate>
+    <div class="dialog-action-btns">
+        <button 
+            *ngIf="displayCancel"
+            class="red-color"
+            mat-button (click)="onClose()">
+            {{ leftButtonText }}
+        </button>
+        <button 
+            *ngIf="displayAfirmative"
+            class="green-color"
+            mat-button 
+            (click)="onAfirmative()"> 
+            {{ rightButtonText }}
+        </button>
+    </div>
+</ng-template>
+
+<fx-common-dialog 
+    (closeEventEmitter)="onClose()"
+    [headerTemplate]="customHeaderTemplate"
+    [contentTemplate]="customContentTemplate">
+</fx-common-dialog>
