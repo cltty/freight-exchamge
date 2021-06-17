@@ -21,9 +21,8 @@
                                 {{ unreadNotification.message }}
                             </div>
                             <div class="action-btn">
-                                <button *ngIf="companyType === 'Carrier'" mat-raised-button color="warn" (click)="reportShipper(i);$event.stopPropagation()">Report Shipper</button>
-                                <button *ngIf="companyType === 'Shipper'" mat-raised-button color="warn" (click)="reportCarrier(i);$event.stopPropagation()">Report Carrier</button>
-                                
+                                <button *ngIf="companyType === 'Carrier'" mat-raised-button color="warn" (click)="reportShipper(i, unreadNotification.from.companyLegalName);$event.stopPropagation()">Report Shipper</button>
+                                <button *ngIf="companyType === 'Shipper'" mat-raised-button color="warn" (click)="reportCarrier(i, unreadNotification.from.companyLegalName);$event.stopPropagation()">Report Carrier</button>
                                 <button mat-raised-button color="primary" (click)="markAsRead(i);$event.stopPropagation()">Mark As Read</button>
                             </div>
                         </mat-panel-description>
@@ -63,3 +62,4 @@
             </div>
     </div>
 </div>
+<ng-template #dialog></ng-template>

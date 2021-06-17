@@ -1,4 +1,4 @@
-import { animate, style, transition, trigger } from '@angular/animations';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 export const animations = {
     dialogAnimation: [
@@ -14,6 +14,21 @@ export const animations = {
         trigger('modalBgFadeIn', [
             transition(':enter', [style({ opacity: 0 }), animate('200ms 0ms ease-out', style({ opacity: 0.4 }))]),
             transition(':leave', [style({ opacity: 0.4 }), animate('200ms 0ms ease-out', style({ opacity: 0 }))]),
+        ])
+    ],
+    inOutAnimation: [
+        trigger('inOutAnimation', [
+            state('in', style({ opacity: 1 })),
+            transition(':enter', [style({ opacity: '0' }), animate('.5s ease-out', style({ opacity: '1' }))]),
+            transition(':leave', [style({ opacity: '1' }), animate('.5s ease-out', style({ opacity: '0' }))]),
+        ])
+    ],
+    fadeIn: [
+        trigger('fadeIn', [
+            transition(':enter', [
+                style({ opacity: '0' }),
+                animate('.5s ease-out', style({ opacity: '1' })),
+            ]),
         ])
     ]
 }

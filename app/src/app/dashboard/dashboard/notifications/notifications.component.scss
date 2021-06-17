@@ -78,10 +78,20 @@
     }
 
     .action-btn {
-        margin-top: 5px;
+        margin-top: 2px;
         
         button:nth-child(1) {
             margin-right: 10px;
+        }
+
+        button:hover:nth-child(1) {
+            background-color: #ed594e;
+            transition: all 0.3s ease 0s;
+        }
+
+        button:hover:nth-child(2) {
+            background-color: #5464bf;
+            transition: all 0.3s ease 0s;
         }
     }
 

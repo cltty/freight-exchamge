@@ -1,11 +1,8 @@
 import { Component, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CompanyProfile } from 'src/app/auth/create-profile/models/CompanyProfile';
-import { LoadBookFailedDialogComponent } from 'src/app/common/dialogs/load-book-failed-dialog/load-book-failed-dialog.component';
-import { LoadBookedDialogComponent } from 'src/app/common/dialogs/load-booked-dialog/load-booked-dialog.component';
 import { NotificationDialogComponent } from 'src/app/common/dialogs/notification-dialog/notification-dialog.component';
 import { DialogService } from 'src/app/services/dialog-service/dialog.service';
 import { UserService } from 'src/app/user-service/user.service';
@@ -44,7 +41,6 @@ export class LoadboardComponent implements OnInit {
     private formBuilder: FormBuilder, 
     private dashboardService: DashboardService,
     private userService: UserService,
-    private dialog: MatDialog,
     private dialogService: DialogService
     ) {
     this.searchCriteriaForm = this.formBuilder.group({
@@ -70,32 +66,35 @@ export class LoadboardComponent implements OnInit {
   }
 
   public bookLoad(index: number) {
-    this.dashboardService
-      .bookLoad(this.availableLoads[index]._id, this.computeBookPayload())
-      .pipe(takeUntil(this.componentDestroyed$))
-      .subscribe(() => {
-        setTimeout(() => {
-          this.openLoadBookedDialog();
-          // const dialogRef = this.dialog.open(LoadBookedDialogComponent);
+    this.dialogService.showDialog(this.dialogContainer, NotificationDialogComponent, this.computeConfirmationDialogInputs());
 
-          // dialogRef.afterClosed().pipe(takeUntil(this.componentDestroyed$)).subscribe(result => {
-          //   if (result) {
-          //     this.getAllUnbookedLoads();
-          //   }
-          // });
-          
-        }, 1000);
-      },
-      () => {
-        this.openLoadBookFailedDialog();
-        // const dialogRef = this.dialog.open(LoadBookFailedDialogComponent);
-        // dialogRef.afterClosed().pipe(takeUntil(this.componentDestroyed$)).subscribe(result => {
-        //   if (result) {
-        //     this.getAllUnbookedLoads();
-        //   }
-        // });
-      }
-    );
+    this.dialogService.closeEventEmitter().subscribe(() => {
+      this.dialogService.hideDialog([
+        this.closeDialogEmitterSubscription,
+        this.afirmativeAnswearDialogEmitterSubscription
+      ]);
+    });
+
+    this.dialogService.trueEventEmitter().subscribe(() => {
+      this.dialogService.hideDialog([
+        this.closeDialogEmitterSubscription,
+        this.afirmativeAnswearDialogEmitterSubscription
+      ]);
+
+      this.dashboardService
+        .bookLoad(this.availableLoads[index]._id, this.computeBookPayload())
+        .pipe(takeUntil(this.componentDestroyed$))
+        .subscribe(
+          () => {
+            setTimeout(() => {
+              this.openLoadBookedDialog();    
+            }, 1000);
+          },
+          () => {
+            this.openLoadBookFailedDialog();
+          }
+      );
+    });
   }
 
   private computeBookPayload() {
@@ -149,6 +148,31 @@ export class LoadboardComponent implements OnInit {
 
       this.getAllUnbookedLoads();
     });
+  }
+
+  private computeConfirmationDialogInputs() {
+    return [
+      {
+        name: 'headerText',
+        value: 'Are you sure you want to book this load?'
+      },
+      {
+        name: 'displayCancel',
+        value: true
+      },
+      {
+        name: 'displayAfirmative',
+        value: true
+      },
+      {
+        name: 'leftButtonText',
+        value: 'No'
+      },
+      {
+        name: 'rightButtonText',
+        value: 'Yes'
+      },
+    ];
   }
 
   private computeLoadBookedDialogInputs() {

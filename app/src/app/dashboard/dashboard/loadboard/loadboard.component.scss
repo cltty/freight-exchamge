@@ -1,10 +1,8 @@
 @import '../../../../styles.scss';
 
-$money-green:#118C4F;
+// $money-green:#118C4F;
 
-.main {
-    // noth
-}
+
 
 .top-section {
     margin-top: 20px;
@@ -33,6 +31,10 @@ $money-green:#118C4F;
             &:hover {
                 box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
                 transition: all 0.3s ease 0s;
+            }
+
+            mat-expansion-panel-header {
+                height: 100% !important;
             }
         }
     }
@@ -70,13 +72,14 @@ $money-green:#118C4F;
 
     .distance {
         color: black;
-        margin-top: 10px;
+        margin-top: 17px;
         font-weight: 400;
     }
 
     .equipment {
         display: flex;
         flex-direction: column;
+        margin-top: 6px;
 
         div:nth-child(1) {
             color: black;
@@ -85,21 +88,19 @@ $money-green:#118C4F;
     }
 
     .price {
-        margin-top: 10px;
+        margin-top: 17px;
         color: $money-green;
         font-weight: 700;
     }
 
     .action-btn {
-        margin-top: 5px;
+        margin-top: 7px;
         
         button:hover {
-            background-color: $money-green;
-            color: black;
+            background-color: #5464bf;
             transition: all 0.3s ease 0s;
         }
     }
-
 }
 
 mat-icon {

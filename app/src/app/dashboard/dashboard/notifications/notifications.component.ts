@@ -1,10 +1,9 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { Subject } from 'rxjs';
+import { Component, Input, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CompanyProfile } from 'src/app/auth/create-profile/models/CompanyProfile';
-import { MarkAsReadDialogComponent } from 'src/app/common/dialogs/mark-as-read-dialog/mark-as-read-dialog.component';
-import { ReportShipperComponent } from 'src/app/common/dialogs/report-shipper/report-shipper.component';
+import { NotificationDialogComponent } from 'src/app/common/dialogs/notification-dialog/notification-dialog.component';
+import { DialogService } from 'src/app/services/dialog-service/dialog.service';
 import { UserService } from 'src/app/user-service/user.service';
 import { DashboardService } from '../../service/dashboard.service';
 
@@ -14,6 +13,9 @@ import { DashboardService } from '../../service/dashboard.service';
   styleUrls: ['./notifications.component.scss']
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
+  @ViewChild('dialog', { read: ViewContainerRef })
+  public dialogContainer: ViewContainerRef;
+  
   @Input()
   public companyProfile: CompanyProfile;
   
@@ -21,9 +23,15 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   public companyType: string;
 
+  private closeDialogEmitterSubscription: Subscription;
+  private trueAnswearDialogEmitterSubscription: Subscription;
+
   private componentDestroyed$: Subject<void> = new Subject<void>();
 
-  constructor(private userService: UserService, private dashboardService: DashboardService, public dialog: MatDialog) { }
+  constructor(
+    private userService: UserService,
+    private dashboardService: DashboardService,
+    private dialogService: DialogService) { }
 
   ngOnInit() {
     this.getUnreadNotifications();
@@ -35,7 +43,6 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.componentDestroyed$))
       .subscribe(unreadNotifications => {
         this.unreadNotifications = unreadNotifications;
-        console.log("unreadNotifications >> ", unreadNotifications);
       });
   }
 
@@ -43,36 +50,128 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     this.companyType = this.userService.getCompanyType();
   }
 
-  public reportShipper(index: number) {
-    const dialogRef = this.dialog.open(ReportShipperComponent);
-
-    dialogRef.afterClosed().pipe(takeUntil(this.componentDestroyed$)).subscribe(result => {
-      if (result) {
-        this.dashboardService.reportUser(this.computeReportShipperPayload(index)).subscribe();
-      }
-    });
+  public reportShipper(index: number, companyName: string) {
+    this.openReportShipperDialog(index, companyName);
   }
 
-  public reportCarrier(index: number) {
-    const dialogRef = this.dialog.open(ReportShipperComponent);
-
-    dialogRef.afterClosed().pipe(takeUntil(this.componentDestroyed$)).subscribe(result => {
-      if (result) {
-        this.dashboardService.reportUser(this.computeReportCarrierPayload(index)).subscribe();
-      }
-    });
+  public reportCarrier(index: number, companyName: string) {
+    this.openReportCarrierDialog(index, companyName);
   }
 
   public markAsRead(index: number) {
-    const dialogRef = this.dialog.open(MarkAsReadDialogComponent);
+    this.openMarkAsReadDialog(index);
+  }
 
-    dialogRef.afterClosed().pipe(takeUntil(this.componentDestroyed$)).subscribe(result => {
-      if (result) {
-        this.dashboardService.markAsRead(this.unreadNotifications[index]._id).subscribe(() => {
-          this.getUnreadNotifications();
-        }); 
-      }
+  private openReportShipperDialog(index: number, companyName: string) {
+    this.dialogService.showDialog(this.dialogContainer, NotificationDialogComponent, this.computeReportUserDialogInputs(companyName));
+
+     this.dialogService.closeEventEmitter().subscribe(() => {
+      this.dialogService.hideDialog([
+        this.closeDialogEmitterSubscription,
+        this.trueAnswearDialogEmitterSubscription
+      ]);
     });
+
+    this.dialogService.trueEventEmitter().subscribe(() => {
+      this.dialogService.hideDialog([
+        this.closeDialogEmitterSubscription,
+        this.trueAnswearDialogEmitterSubscription
+      ]);
+      
+      this.dashboardService.reportUser(this.computeReportShipperPayload(index)).subscribe();
+    });
+  }
+
+  private openReportCarrierDialog(index: number, companyName: string) {
+    this.dialogService.showDialog(this.dialogContainer, NotificationDialogComponent, this.computeReportUserDialogInputs(companyName));
+
+     this.dialogService.closeEventEmitter().subscribe(() => {
+      this.dialogService.hideDialog([
+        this.closeDialogEmitterSubscription,
+        this.trueAnswearDialogEmitterSubscription
+      ]);
+    });
+
+    this.dialogService.trueEventEmitter().subscribe(() => {
+      this.dialogService.hideDialog([
+        this.closeDialogEmitterSubscription,
+        this.trueAnswearDialogEmitterSubscription
+      ]);
+      
+      this.dashboardService.reportUser(this.computeReportCarrierPayload(index)).subscribe();
+    });
+  }
+
+  private openMarkAsReadDialog(index: number) {
+    this.dialogService.showDialog(this.dialogContainer, NotificationDialogComponent, this.computeMarkAsReadDialogInputs());
+
+     this.dialogService.closeEventEmitter().subscribe(() => {
+      this.dialogService.hideDialog([
+        this.closeDialogEmitterSubscription,
+        this.trueAnswearDialogEmitterSubscription
+      ]);
+    });
+
+    this.dialogService.trueEventEmitter().subscribe(() => {
+      this.dialogService.hideDialog([
+        this.closeDialogEmitterSubscription,
+        this.trueAnswearDialogEmitterSubscription
+      ]);
+      
+      this.dashboardService.markAsRead(this.unreadNotifications[index]._id).subscribe(() => {
+        this.getUnreadNotifications();
+      }); 
+    });
+  }
+
+  private computeReportUserDialogInputs(companyName: string) {
+    return [
+      {
+        name: 'headerText',
+        value: 'Are you sure you want to report ' + companyName + '?'
+      },
+      {
+        name: 'leftButtonText',
+        value: 'No'
+      },
+      {
+        name: 'rightButtonText',
+        value: 'Yes'
+      },
+      {
+        name: 'displayCancel',
+        value: true
+      },
+      {
+        name: 'displayAfirmative',
+        value: true
+      },
+    ];
+  }
+
+  private computeMarkAsReadDialogInputs() {
+    return [
+      {
+        name: 'headerText',
+        value: 'Mark as read?'
+      },
+      {
+        name: 'leftButtonText',
+        value: 'No'
+      },
+      {
+        name: 'rightButtonText',
+        value: 'Yes'
+      },
+      {
+        name: 'displayCancel',
+        value: true
+      },
+      {
+        name: 'displayAfirmative',
+        value: true
+      },
+    ];
   }
 
   private computeReportShipperPayload(index: number) {

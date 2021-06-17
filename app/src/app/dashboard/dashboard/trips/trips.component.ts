@@ -3,11 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CompanyProfile } from 'src/app/auth/create-profile/models/CompanyProfile';
-import { CancelLoadDialogComponent } from 'src/app/common/dialogs/cancel-load-dialog/cancel-load-dialog.component';
-import { LoadCancelledDialogComponent } from 'src/app/common/dialogs/load-cancelled-dialog/load-cancelled-dialog.component';
-import { LoadRejectedDialogComponent } from 'src/app/common/dialogs/load-rejected-dialog/load-rejected-dialog.component';
 import { NotificationDialogComponent } from 'src/app/common/dialogs/notification-dialog/notification-dialog.component';
-import { RejectLoadDialogComponent } from 'src/app/common/dialogs/reject-load-dialog/reject-load-dialog.component';
 import { DialogService } from 'src/app/services/dialog-service/dialog.service';
 import { UserService } from 'src/app/user-service/user.service';
 import { CreateLoadDialogComponent } from '../../create-load-dialog/create-load-dialog.component';
@@ -127,7 +123,6 @@ export class TripsComponent implements OnInit {
     }
   }
 
-
   public createNewLoad(newLoadPayLoad) {
     this.dashboardService.createNewLoad(this.computeNewLoadPayload(newLoadPayLoad)).subscribe(response => {
       setTimeout(() => {
@@ -138,39 +133,10 @@ export class TripsComponent implements OnInit {
 
   public cancelLoad(index: number) {
     this.openCancelLoadDialog(index);
-
-    // const dialogRef = this.dialog.open(CancelLoadDialogComponent);
-
-    // dialogRef.afterClosed().pipe(takeUntil(this.componentDestroyed$)).subscribe(result => {
-    //   if (result) {
-    //     this.dashboardService.cancelLoad(this.loads[index]._id).pipe(takeUntil(this.componentDestroyed$)).subscribe(() => {
-    //       setTimeout(() => {
-    //         const loadCancelledDialogRef = this.dialog.open(LoadCancelledDialogComponent);
-    //         loadCancelledDialogRef.afterClosed().pipe(takeUntil(this.componentDestroyed$)).subscribe(() => {
-    //           this.getShipperCreatedLoads();
-    //         });
-    //       }, 700);
-    //     });
-    //   }
-    // });
   }
 
   public rejectLoad(index: number) {
     this.openRejectLoadDialog(index);
-
-    // const dialogRef = this.dialog.open(RejectLoadDialogComponent);
-    // dialogRef.afterClosed().pipe(takeUntil(this.componentDestroyed$)).subscribe(result => {
-    //   if (result) {
-    //     this.dashboardService.rejectLoad(this.loads[index]._id).pipe(takeUntil(this.componentDestroyed$)).subscribe(() => {
-    //       setTimeout(() => {
-    //         const loadRejectedDialogRef = this.dialog.open(LoadRejectedDialogComponent);
-    //         loadRejectedDialogRef.afterClosed().pipe(takeUntil(this.componentDestroyed$)).subscribe(() => {
-    //           this.getCarrierBookedLoads();
-    //         });
-    //       }, 700);
-    //     });
-    //   }
-    // });
   }
 
   private openCancelLoadDialog(index: number) {
@@ -190,11 +156,8 @@ export class TripsComponent implements OnInit {
       ]);
       this.dashboardService.cancelLoad(this.loads[index]._id).pipe(takeUntil(this.componentDestroyed$)).subscribe(() => {
         setTimeout(() => {
-          const loadCancelledDialogRef = this.dialog.open(LoadCancelledDialogComponent);
-          loadCancelledDialogRef.afterClosed().pipe(takeUntil(this.componentDestroyed$)).subscribe(() => {
-            this.getShipperCreatedLoads();
-          });
-        }, 700);
+          this.openSucessfullyCancelledDialog();
+        }, 500);
       });
     });
   }
@@ -217,12 +180,53 @@ export class TripsComponent implements OnInit {
 
       this.dashboardService.rejectLoad(this.loads[index]._id).pipe(takeUntil(this.componentDestroyed$)).subscribe(() => {
         setTimeout(() => {
-          const loadRejectedDialogRef = this.dialog.open(LoadRejectedDialogComponent);
-          loadRejectedDialogRef.afterClosed().pipe(takeUntil(this.componentDestroyed$)).subscribe(() => {
-            this.getCarrierBookedLoads();
-          });
-        }, 700);
+          this.openSucessfullyRejectedDialog();
+        }, 500);
       });
+    });
+  }
+
+  private openSucessfullyRejectedDialog() {
+    this.dialogService.showDialog(this.dialogContainer, NotificationDialogComponent, this.computeSuccessfulyRejectedDialogInputs());
+
+     this.dialogService.closeEventEmitter().subscribe(() => {
+      this.dialogService.hideDialog([
+        this.closeDialogEmitterSubscription,
+        this.trueAnswearDialogEmitterSubscription
+      ]);
+
+      this.getCarrierBookedLoads();
+    });
+
+    this.dialogService.trueEventEmitter().subscribe(() => {
+      this.dialogService.hideDialog([
+        this.closeDialogEmitterSubscription,
+        this.trueAnswearDialogEmitterSubscription
+      ]);
+
+      this.getCarrierBookedLoads();
+    });
+  }
+
+  private openSucessfullyCancelledDialog() {
+    this.dialogService.showDialog(this.dialogContainer, NotificationDialogComponent, this.computeSuccessfulyCancelledDialogInputs());
+
+     this.dialogService.closeEventEmitter().subscribe(() => {
+      this.dialogService.hideDialog([
+        this.closeDialogEmitterSubscription,
+        this.trueAnswearDialogEmitterSubscription
+      ]);
+
+      this.getShipperCreatedLoads();
+    });
+
+    this.dialogService.trueEventEmitter().subscribe(() => {
+      this.dialogService.hideDialog([
+        this.closeDialogEmitterSubscription,
+        this.trueAnswearDialogEmitterSubscription
+      ]);
+
+      this.getShipperCreatedLoads();
     });
   }
 
@@ -255,7 +259,7 @@ export class TripsComponent implements OnInit {
     return [
       {
         name: 'headerText',
-        value: 'Are you sure you want you cancel this load?'
+        value: 'Are you sure you want you reject this load?'
       },
       {
         name: 'leftButtonText',
@@ -268,6 +272,48 @@ export class TripsComponent implements OnInit {
       {
         name: 'displayCancel',
         value: true
+      },
+      {
+        name: 'displayAfirmative',
+        value: true
+      },
+    ];
+  }
+
+  private computeSuccessfulyRejectedDialogInputs() {
+    return [
+      {
+        name: 'headerText',
+        value: 'Load Rejected!'
+      },
+      {
+        name: 'rightButtonText',
+        value: 'Ok'
+      },
+      {
+        name: 'displayCancel',
+        value: false
+      },
+      {
+        name: 'displayAfirmative',
+        value: true
+      },
+    ];
+  }
+
+  private computeSuccessfulyCancelledDialogInputs() {
+    return [
+      {
+        name: 'headerText',
+        value: 'Load Cancelled!'
+      },
+      {
+        name: 'rightButtonText',
+        value: 'Ok'
+      },
+      {
+        name: 'displayCancel',
+        value: false
       },
       {
         name: 'displayAfirmative',
