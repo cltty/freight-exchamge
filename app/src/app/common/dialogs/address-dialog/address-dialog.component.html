@@ -1,0 +1,25 @@
+<ng-template #customHeaderTemplate>
+    <div class="dialog-header">
+        <p>Select address</p>
+        <mat-icon aria-hidden="false" aria-label="dialog-close" (click)="onClose()">close</mat-icon>
+    </div>
+</ng-template>
+
+<ng-template #customContentTemplate>
+    <div class="dialog-content">
+        <mat-form-field appearance="standard">
+            <input matInput ngx-google-places-autocomplete [options]='options' #placesRef="ngx-places" (onAddressChange)="handleAddressChange($event)"/>
+        </mat-form-field>
+    
+        <div class="dialog-action-btns" [ngClass]="addressForm.valid ? 'create-btn-not-disabled' : 'create-btn-disabled'">
+            <button mat-button [disabled]="!addressForm.valid" (click)="onAddressSelected()">Select</button>  
+        </div>
+    </div>
+</ng-template>
+
+<fx-common-dialog 
+    (closeEventEmitter)="onClose()"
+    [addressDialog]="true"
+    [headerTemplate]="customHeaderTemplate"
+    [contentTemplate]="customContentTemplate">
+</fx-common-dialog>

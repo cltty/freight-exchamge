@@ -3,6 +3,7 @@ $white: #ffffff;
 $material-red: #f44336;
 $money-green:#118C4F;
 $light-green: #90EE90;
+$pale-green: #98FB98;
 
 body {
     margin: 0px;
@@ -28,3 +29,9 @@ body.dialog-open {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+div.mat-form-field-wrapper {
+    div:nth-child(1) {
+        background-color: white;
+    }
+}

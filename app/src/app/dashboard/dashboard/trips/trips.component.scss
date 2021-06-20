@@ -1,6 +1,5 @@
 @import '../../../../styles.scss';
 
-
 .main {
     width: 80vw;
     margin: auto;
@@ -72,7 +71,6 @@
     .equipment {
         display: flex;
         flex-direction: column;
-        // margin-right: 80px;
         div:nth-child(1) {
             color: black;
             font-weight: 400;
@@ -97,7 +95,6 @@
             transition: all 0.3s ease 0s;
         }
     }
-
 }
 
 .cancelled-rejected {
@@ -112,6 +109,10 @@
 
 .cancelled-trip {
     background-color: $material-red;
+}
+
+.booked-trip {
+    background-color: $pale-green;
 }
 
 .details {

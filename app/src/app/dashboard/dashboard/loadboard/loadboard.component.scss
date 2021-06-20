@@ -1,9 +1,5 @@
 @import '../../../../styles.scss';
 
-// $money-green:#118C4F;
-
-
-
 .top-section {
     margin-top: 20px;
     display: flex;
@@ -44,7 +40,6 @@
     margin-left: 8px;
 }
 
-
 .panel-title {
     display: flex;
     flex-direction: row;
@@ -55,6 +50,7 @@
         display: flex;
         flex-direction: column;
         margin-right: 55px;
+
         &__name {
             font-weight: 700;
         }
@@ -105,6 +101,7 @@
 
 mat-icon {
     cursor: pointer;
+
     &:hover {
         transition: all 0.2s ease-in-out;
         transform: rotate3d(0, 0, 1, -360deg);

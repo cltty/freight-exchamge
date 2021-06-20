@@ -93,7 +93,6 @@ export class PerformanceComponent implements OnInit, OnDestroy {
   }
 
   private changeLoadsPeriod(period: string) {
-    console.log("changeLoadsPeriod > ", period);
     switch(period) {
       case 'sixWeeks': {
         let tmpArray = [];

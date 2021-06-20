@@ -1,0 +1,154 @@
+<div class="modal" [@dialogAnimation] >
+    <div class="modal__container" [ngClass]="addressDialogOpened ? 'hide-component' : null">
+        <div class="form" [formGroup]="newLoadForm">
+          <h2 >Create new load</h2>
+          <div class="origin-section">
+              <div class="origin-section__title">
+                <p>Origin</p>
+                <mat-icon
+                  *ngIf="fullOriginAddress.value"
+                  (click)="onOriginAddressSelect()"
+                  aria-hidden="false" aria-label="Edit origin address icon">edit</mat-icon>
+              </div>
+        
+              <div *ngIf="!originCity.value" class="select-origin-address-btn">
+                <button mat-raised-button color="primary" (click)="onOriginAddressSelect()">Select origin address</button>
+              </div>
+
+              <div *ngIf="originCity.value" class="origin-section__input-section">
+                <div class="origin-section__input-section--left">
+                  <mat-form-field>
+                    <mat-label>City</mat-label>
+                    <input class="disabled-input-field" [disabled]="true" matInput [value]="originCity.value ? originCity.value : null">
+                  </mat-form-field>
+              
+                  <mat-form-field >
+                    <mat-label>Country</mat-label>
+                    <input class="disabled-input-field" [disabled]="true" matInput [value]="originCountry.value ? originCountry.value : null">
+                  </mat-form-field>
+                </div>
+          
+                <div class="origin-section__input-section--right">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Choose a date</mat-label>
+                    <input matInput  [matDatepicker]="picker" (input)="inputChange($event, 'originArrival')" formControlName="originArrival">
+                    <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+          </div>
+
+          <div class="origin-section">
+            <div class="origin-section__title">
+              <p>Destination</p>
+              <mat-icon
+                  *ngIf="fullDestinationAddress.value"
+                  (click)="onDestinationAddressSelect()"
+                  aria-hidden="false" aria-label="Edit destination address icon">edit</mat-icon>
+            </div>
+
+            <div *ngIf="!destinationCity.value" class="select-origin-address-btn">
+              <button 
+                  [ngClass]="(fullOriginAddress.value && originArrival.value) ? null : 'disabled-input-field'"
+                  matTooltip="Please select origin address and arrival first."
+                  [matTooltipDisabled]="fullOriginAddress.value && originArrival.value"
+                  mat-raised-button color="primary"
+                  (click)="onDestinationAddressSelect()">Select destination address</button>
+            </div>
+
+            <div *ngIf="destinationCity.value" class="origin-section__input-section">
+              <div class="origin-section__input-section--left">
+                <mat-form-field>
+                  <mat-label>City</mat-label>
+                  <input class="disabled-input-field" [disabled]="true" matInput [value]="destinationCity.value ? destinationCity.value : null">
+                </mat-form-field>
+            
+                <mat-form-field >
+                  <mat-label>Country</mat-label>
+                  <input class="disabled-input-field" [disabled]="true" matInput [value]="destinationCountry.value ? destinationCountry.value : null">
+                </mat-form-field>
+              </div>
+        
+              <div class="origin-section__input-section--right">
+                <mat-form-field appearance="fill">
+                  <mat-label>Choose a date</mat-label>
+                  <input matInput [matDatepicker]="picker" (input)="inputChange($event, 'destinationArrival')" formControlName="destinationArrival">
+                  <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <mat-error *ngIf="destinationCountry.errors?.unreachable">
+                    This route is not reachable by land. Please select other destination.
+                </mat-error>
+              </div>
+            </div>
+          </div>
+        
+          <div class="distance-payout-section">
+            <div class="distance-payout__left">
+              <div class="distance-section__title">
+                <p>Distance</p>
+              </div>
+              <div class="distance-section__input-section">
+                <mat-form-field>
+                  <mat-label></mat-label>
+                  <input [disabled]="true" matInput [value]="distance.value ? distance.value : 0">
+                </mat-form-field>
+              </div>
+            </div>
+        
+            <div class="distance-payout__right">
+              <div class="distance-section">
+                <div class="distance-section__title">
+                  <p>Payout</p>
+                </div>
+                <mat-form-field class="distance-section__input-section">
+                  <mat-label>Payout</mat-label>
+                  <input (input)="inputChange($event, 'payout')" matInput formControlName="payout">
+                </mat-form-field>
+                <mat-error *ngIf="payout.touched &&  payout.errors?.required">
+                  Payout is required.
+                </mat-error>
+              </div>
+            </div>        
+          </div>
+        
+          <div class="equipment-section">
+              <div class="equipment-section__title">
+                <p>Equipment</p>
+              </div>
+            
+              <div class="equipment-section__input-section">
+                <mat-form-field class="equipment-section__input-section--left">
+                  <mat-label>Equipment</mat-label>
+                  <mat-select formControlName="equipment" single (selectionChange)="inputChangeEquipment($event, 'equipment')">
+                    <mat-option *ngFor="let equipment of equipmentTypes" [value]="equipment">
+                      {{ equipment }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="equipment.touched &&  equipment.errors?.required">
+                    Equipment is required.
+                  </mat-error>
+                </mat-form-field>
+            
+                <mat-form-field >
+                  <mat-label>Required</mat-label>
+                  <mat-select formControlName="isEquipmentRequired" single (selectionChange)="inputChangeEquipment($event, 'isEquipmentRequired')">
+                    <mat-option *ngFor="let option of isEquipmentRequiredOptions" [value]="option">
+                      {{ option }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="isEquipmentRequired.touched &&  isEquipmentRequired.errors?.required"></mat-error>
+                </mat-form-field>
+              </div>
+          </div>
+        </div>
+
+        <div class="action-btns" [ngClass]="newLoadForm.valid ? 'create-btn-not-disabled' : 'create-btn-disabled'">
+            <button mat-button (click)="onClose()">Cancel</button>
+            <button mat-button [disabled]="!newLoadForm.valid" (click)="onSubmit()">Create</button>  
+        </div>
+    </div>
+</div>
+<div class="modal-background" [@modalBgFadeIn]></div>
+<ng-template #dialog></ng-template>

@@ -14,7 +14,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox'
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatRippleModule } from '@angular/material/core';
+import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatStepperModule } from '@angular/material/stepper';
 import { CreateProfileComponent } from './auth/create-profile/create-profile.component';
@@ -40,20 +40,13 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
-import { CreateLoadDialogComponent } from './dashboard/create-load-dialog/create-load-dialog.component';
-import { CancelLoadDialogComponent } from './common/dialogs/cancel-load-dialog/cancel-load-dialog.component';
-import { RejectLoadDialogComponent } from './common/dialogs/reject-load-dialog/reject-load-dialog.component';
-import { LoadCancelledDialogComponent } from './common/dialogs/load-cancelled-dialog/load-cancelled-dialog.component';
-import { LoadRejectedDialogComponent } from './common/dialogs/load-rejected-dialog/load-rejected-dialog.component';
-import { ReportShipperComponent } from './common/dialogs/report-shipper/report-shipper.component';
-import { MarkAsReadDialogComponent } from './common/dialogs/mark-as-read-dialog/mark-as-read-dialog.component';
-import { ReportCarrierComponent } from './common/dialogs/report-carrier/report-carrier.component';
-import { LogoutDialogComponent } from './common/dialogs/logout-dialog/logout-dialog.component';
-import { LoadBookedDialogComponent } from './common/dialogs/load-booked-dialog/load-booked-dialog.component';
-import { LoadBookFailedDialogComponent } from './common/dialogs/load-book-failed-dialog/load-book-failed-dialog.component';
-import { RegisterSucessfulDialogComponent } from './common/dialogs/register-sucessful-dialog/register-sucessful-dialog.component';
 import { CommonDialogComponent } from './common/dialogs/common-dialog/common-dialog.component';
 import { NotificationDialogComponent } from './common/dialogs/notification-dialog/notification-dialog.component';
+import { NewLoadDialogComponent } from './common/dialogs/new-load-dialog/new-load-dialog.component';
+import { GooglePlaceModule } from "ngx-google-places-autocomplete";
+import { AddressDialogComponent } from './common/dialogs/address-dialog/address-dialog.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -70,20 +63,10 @@ import { NotificationDialogComponent } from './common/dialogs/notification-dialo
     NotificationsComponent,
     CompanyAccountComponent,
     PerformanceComponent,
-    CreateLoadDialogComponent,
-    CancelLoadDialogComponent,
-    RejectLoadDialogComponent,
-    LoadCancelledDialogComponent,
-    LoadRejectedDialogComponent,
-    ReportShipperComponent,
-    MarkAsReadDialogComponent,
-    ReportCarrierComponent,
-    LogoutDialogComponent,
-    LoadBookedDialogComponent,
-    LoadBookFailedDialogComponent,
-    RegisterSucessfulDialogComponent,
     CommonDialogComponent,
-    NotificationDialogComponent
+    NotificationDialogComponent,
+    NewLoadDialogComponent,
+    AddressDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -112,7 +95,11 @@ import { NotificationDialogComponent } from './common/dialogs/notification-dialo
     MatAutocompleteModule,
     MatExpansionModule,
     MatCardModule,
-    MatDialogModule
+    MatDialogModule,
+    GooglePlaceModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatTooltipModule
   ],
   providers: [
     HttpClientModule,
@@ -124,7 +111,8 @@ import { NotificationDialogComponent } from './common/dialogs/notification-dialo
       },
       multi: true,
       deps: [Router, AuthService]
-    }
+    },
+    MatNativeDateModule
   ],
   bootstrap: [AppComponent]
 })

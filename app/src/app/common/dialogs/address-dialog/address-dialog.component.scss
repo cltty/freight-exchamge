@@ -23,27 +23,28 @@
     }
 }
 
-.dialog-action-btns {
+.dialog-content {
+    margin: auto;
     display: flex;
-    justify-content: center;
+    flex-direction: row;
+    width: 250px;
+    padding-top: 40px;
 
-    button:nth-child(1) {
-        margin-right: 10px;
+    button {
+        margin-top: 17px;
+        cursor: pointer;
     }
+    
+}
 
+.create-btn-not-disabled {
     button:hover {
-        transition: all 0.2s ease-in-out;
-    }
-}
-
-.red-color {
-    &:hover {
-        color: $material-red;
-    }
-}
-
-.green-color {
-    &:hover {
         color: $money-green;
+    }
+}
+
+.create-btn-disabled {
+    button:hover {
+        cursor: not-allowed;
     }
 }

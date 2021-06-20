@@ -1,5 +1,5 @@
 <div class="modal" [@dialogAnimation]>
-    <div class="modal__container">
+    <div class="modal__container" [ngClass]="addressDialog ? 'address-dialog-height': 'common-height'">
         <div class="modal__container--header">
             <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
         </div>

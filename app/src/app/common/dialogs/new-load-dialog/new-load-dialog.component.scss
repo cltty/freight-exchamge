@@ -1,0 +1,162 @@
+@import '../../../../styles.scss';
+
+.modal {
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+
+    &__container {
+        margin: auto;
+        margin-top: 200px;
+        background-color: $white;    
+        border-radius: 4px;
+        width: 800px;
+    }
+}
+
+.modal-background {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #24303b;
+    opacity: 0.4;
+    z-index: 900;
+}
+
+.form {
+    margin: auto;
+    width: 600px;
+}
+
+.origin-section {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    margin-bottom: 20px;
+
+    &__title {
+        font-weight: 400;
+        font-size: 20px;
+        display: flex;
+        flex-direction: row;
+
+        mat-icon {
+            cursor: pointer;
+            font-size: 18px;
+            margin-left: 8px;
+            margin-top: 3px;
+            
+            &:hover {
+                font-size: 20px;
+                transition: all 0.1s ease-in-out;
+                color: $material-red;
+            }
+        }
+    }
+
+    &__input-section {
+        display: flex;
+        flex-direction: row;
+
+        &--left {
+            display: flex;
+            flex-direction: column;
+            margin-right: 40px;
+            margin-top: 13px;
+        }
+
+        &--right {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}
+
+.distance-section {
+    margin-bottom: 20px;
+
+    &__title {
+        font-weight: 400;
+        font-size: 20px;
+    }
+}
+
+.distance-payout-section {
+    display: flex;
+    flex-direction: row;
+}
+
+.distance-payout__left {
+    margin-right: 40px;
+}
+
+.equipment-section {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+
+    &__title {
+        font-weight: 400;
+        font-size: 20px;
+    }
+
+    &__input-section {
+        &--left {
+            margin-right: 40px;
+        }
+    }
+}
+
+.action-btns {
+    padding: 20px 120px 20px 0px;
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+        cursor: pointer;
+    }
+
+    button:hover {
+        transition: all 0.2s ease-in-out;
+
+        &:nth-child(1) {
+            color: $material-red;
+        }
+    }
+}
+
+mat-form-field {
+    width: 260px;
+
+    input {
+        color: black;
+    }
+}
+
+.create-btn-not-disabled {
+    button:hover:nth-child(2) {
+        color: $money-green;
+    }
+}
+
+.create-btn-disabled {
+    button:hover:nth-child(2) {
+        cursor: not-allowed;
+    }
+}
+
+.hide-component {
+    display: none;
+}
+
+.disabled-input-field {
+    &:hover {
+        cursor: not-allowed;
+    }
+}

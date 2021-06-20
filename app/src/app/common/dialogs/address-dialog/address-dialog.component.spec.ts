@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LoadRejectedDialogComponent } from './load-rejected-dialog.component';
+import { AddressDialogComponent } from './address-dialog.component';
 
-describe('LoadRejectedDialogComponent', () => {
-  let component: LoadRejectedDialogComponent;
-  let fixture: ComponentFixture<LoadRejectedDialogComponent>;
+describe('AddressDialogComponent', () => {
+  let component: AddressDialogComponent;
+  let fixture: ComponentFixture<AddressDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LoadRejectedDialogComponent ]
+      declarations: [ AddressDialogComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LoadRejectedDialogComponent);
+    fixture = TestBed.createComponent(AddressDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

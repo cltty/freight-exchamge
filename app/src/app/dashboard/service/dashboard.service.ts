@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
-import { UserService } from 'src/app/user-service/user.service';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -17,12 +16,17 @@ export class DashboardService {
   private readonly BOOK_LOAD = (loadId) => `loads/book/${loadId}`;
   private readonly CANCEL_LOAD = (loadId) => `loads/cancel/${loadId}`;
   private readonly REJECT_LOAD = (loadId) => `loads/reject/${loadId}`;
+  private readonly CREATE_NOTIFICATION =  'notifications';
+
   private readonly GET_UNREAD_NOTIFICATIONS = (userId) => `notifications/${userId}`;
   private readonly MARK_AS_READ = (notificationId) => `notifications/markAsRead/${notificationId}`;
   private readonly REPORT_USER = 'reports';
   private readonly GET_REPORTS_BY_USER_ID = (userId) => `reports/${userId}`;
-
+  private readonly GET_CITIES = 'cities/';
+  private readonly GET_DISTANCE_BETWEEN_CITIES = 'cities/';
+  
   public createNewLoad$: Subject<any> = new Subject<any>();
+  public citiesSuggestions$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
   constructor(private httpClient: HttpClient) { }
 
@@ -33,16 +37,19 @@ export class DashboardService {
   }
 
   public createNewLoad(newLoadPayLoad: any) {
+    console.log("createNewLoad >>> payload >>> ", newLoadPayLoad);
     return this.httpClient.post<any>(
       this.ENV + this.CREATE_NEW_LOAD, 
       newLoadPayLoad
     );
   }
 
-  public cancelLoad(loadId: any) {
+  public cancelLoad(loadId: any, reqBody: any) {
     console.log("cancelLoad, loadId >> ", loadId);
     return this.httpClient.patch<any>(
-      this.ENV + this.CANCEL_LOAD(loadId), {}
+      this.ENV + this.CANCEL_LOAD(loadId), {
+        reqBody
+      }
     );
   }
 
@@ -89,6 +96,15 @@ export class DashboardService {
     );
   }
 
+  public createNotification(notificationPayload: any) {
+    console.log('> createNotification() > received payload > ', notificationPayload);
+    return this.httpClient.post<any>(
+      this.ENV + this.CREATE_NOTIFICATION, {
+        notificationPayload
+      }
+    );
+  }
+
   public getUnreadNotifications(userId: string) {
     return this.httpClient.get<any>(
       this.ENV + this.GET_UNREAD_NOTIFICATIONS(userId)
@@ -112,5 +128,16 @@ export class DashboardService {
     return this.httpClient.patch<any>(
       this.ENV + this.MARK_AS_READ(notificationId), {}
     );
+  }
+
+  public getDistanceBetweenCities(payload: any) {
+    console.log("getDistanceBetweenCities, payload >> ", payload);
+    return this.httpClient.post<any>(this.ENV + this.GET_DISTANCE_BETWEEN_CITIES, 
+      payload
+    );
+  }
+
+  public getCitiesSuggestions() {
+    return this.httpClient.get<any>(this.ENV + this.GET_CITIES);
   }
 }

@@ -4,7 +4,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { NotificationDialogComponent } from 'src/app/common/dialogs/notification-dialog/notification-dialog.component';
-import { RegisterSucessfulDialogComponent } from 'src/app/common/dialogs/register-sucessful-dialog/register-sucessful-dialog.component';
 import { CustomValidators } from 'src/app/common/validators/custom-validator';
 import { DialogService } from 'src/app/services/dialog-service/dialog.service';
 import { AuthService } from '../auth.service';
@@ -34,7 +33,6 @@ export class RegisterComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private formBuilder: FormBuilder,
-    private dialog: MatDialog,
     private dialogService: DialogService
   ) { 
     this.registerForm = this.formBuilder.group({

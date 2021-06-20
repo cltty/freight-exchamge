@@ -26,13 +26,16 @@
     "bic": "^1.1.1",
     "cities.json": "^1.1.5",
     "form-data": "^4.0.0",
+    "google-distance-matrix": "^1.1.1",
     "iban": "0.0.14",
     "ng2-pdf-viewer": "^6.4.1",
     "ngx-captcha": "^9.0.1",
+    "ngx-google-places-autocomplete": "^2.0.5",
     "postcode-validator": "^3.3.0",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "validate-vat-ts": "^1.2.0",
+    "wft-geodb-angular-client": "^5.1.2",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
