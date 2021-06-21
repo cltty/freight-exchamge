@@ -13,6 +13,7 @@ router.get('/:userId', getReportsByUserId, (req, res) => {
 router.post('/', async (req, res) => {
     const report = new Report({
         reason: req.body.reason,
+        reasonSummary: req.body.reasonSummary,
         userId: req.body.userId,
         reportedBy: {
             userId: req.body.reportedBy.userId,

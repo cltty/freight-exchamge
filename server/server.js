@@ -56,7 +56,7 @@ app.use('/notifications',  notificationsRouter);
 app.use('/reports', reportsRouter);
 app.use('/sms', smsRouter);
 
-// app.use('/cities', citiesRouter);
+app.use('/cities', citiesRouter);
 
 //  db connection
 mongoose.connect(

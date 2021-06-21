@@ -5,8 +5,7 @@ const companySchema = new Schema(
     {
         userId: {
             type: String,
-            required: true//,
-            // unique: true
+            required: true
         },
         emailAddress: {
             type: String,
@@ -27,30 +26,15 @@ const companySchema = new Schema(
                 required: true,
                 unique: true
             },
-            state: {
-                type: String,
-                required: true
-            },
             city: {
                 type: String,
                 required: true
-            },
-            addressLine1: {
-                type: String,
-                required: true
-            },
-            addressLine2: {
-                type: String
             },
             phoneNumber: {
                 type: String,
                 required: true
             },
-            postcode: {
-                type: String,
-                required: true
-            },
-            countryName: {
+            country: {
                 type: String,
                 required: true
             },

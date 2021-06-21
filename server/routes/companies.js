@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Company = require('../models/company');
+const User = require('../models/user');
 
 const SHIPPER_TYPE = "Shipper";
 const CARRIER_TYPE = "Carrier";
@@ -22,7 +23,6 @@ router.get('/shippers', async (req, res) => {
     console.log("get('/shippers'");
     try {
         companies = await Company.find({ "companyDetails.companyType": SHIPPER_TYPE });
-        // if (companies === null) return res.status(204).json({ message: "There aren't any shippers" });
         return res.status(200).send(companies);
     } catch (err) {
         return res.status(500).json({ message: err.message });
@@ -33,7 +33,6 @@ router.get('/shippers', async (req, res) => {
 router.get('/carriers', async (req, res) => {
     try {
         companies = await Company.find({ companyType: CARRIER_TYPE });
-        // if (companies === null) return res.status(204).json({ message: "There aren't any shippers" });
         return res.status(200).send(companies);
     } catch (err) {
         return res.status(500).json({ message: err.message });
@@ -60,10 +59,12 @@ router.get('/shippers/:id', getShipperById, (req, res) => {
 
 // Create Company Profile
 router.post('/', async (req, res) => {
-    const company = new Company(req.body);
+    const company = new Company(req.body.profilePayload);
 
     try {
         const newCompany = await company.save();
+        setCompanyProfileCreatedFlag(req.body.profilePayload.userId);
+        setUserCompanyType(req.body.profilePayload.userId, req.body.profilePayload.companyDetails.companyType);
         res.status(201).json(newCompany);
     } catch(err) {
         res.status(400).json({ message: err.message });
@@ -111,4 +112,24 @@ async function getShipperById(req, res, next) {
 
     res.company = company;
     next();
+}
+
+async function setCompanyProfileCreatedFlag(userId) {
+    try {
+        const user = await User.findById(userId);
+        user.companyProfileCreated = true;
+        user.save();
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function setUserCompanyType(userId, companyType) {
+    try {
+        const user = await User.findById(userId);
+        user.companyType = companyType;
+        user.save();
+    } catch (err) {
+        console.log(err);
+    }
 }

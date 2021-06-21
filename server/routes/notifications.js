@@ -2,6 +2,11 @@ const express = require('express');
 const router = express.Router();
 const Notification = require('../models/notification');
 
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const client = require('twilio')(accountSid, authToken);
+
+
 module.exports = router;
 
 // Get unread notifications for userId
@@ -11,25 +16,31 @@ router.get('/:userId', getUnreadNotifications, (req, res) => {
 
 // Create one
 router.post('/', async (req, res) => {
+    console.log('>> Create notification!');
+
     const notification = new Notification({
-        read: req.body.read,
+        read: req.body.notificationPayload.read,
         for: {
-            userId: req.body.for.userId,
-            companyLegalName: req.body.for.companyLegalName,
-            companyEmailAddress: req.body.for.companyEmailAddress,
-            companyPhoneNumber: req.body.for.companyPhoneNumber
+            userId: req.body.notificationPayload.for.userId,
+            companyLegalName: req.body.notificationPayload.for.companyLegalName,
+            companyEmailAddress: req.body.notificationPayload.for.companyEmailAddress,
+            companyPhoneNumber: req.body.notificationPayload.for.companyPhoneNumber
         },
         from: {
-            userId: req.body.from.userId,
-            companyLegalName: req.body.from.companyLegalName,
-            companyEmailAddress: req.body.from.companyEmailAddress,
-            companyPhoneNumber: req.body.from.companyPhoneNumber
+            userId: req.body.notificationPayload.from.userId,
+            companyLegalName: req.body.notificationPayload.from.companyLegalName,
+            companyEmailAddress: req.body.notificationPayload.from.companyEmailAddress,
+            companyPhoneNumber: req.body.notificationPayload.from.companyPhoneNumber
         },
-        message: req.body.message
+        messageSummary: req.body.notificationPayload.messageSummary,
+        message: req.body.notificationPayload.message
     });
 
     try {
         const newNotification = await notification.save();
+
+        sendNotificationViaSMS(notification.for.companyPhoneNumber, notification.messageSummary, notification.message);
+        
         res.status(201).json(newNotification);
     } catch(err) {
         res.status(400).json({ message: err.message });
@@ -75,4 +86,19 @@ async function getNotificationById(req, res, next) {
 
     res.notification = notification;
     next();
+}
+
+function sendNotificationViaSMS(phoneNumber, messageSummary, message) {
+    client.messages
+    .create({
+        body: messageSummary,
+        from: '+15622685702',
+        to: phoneNumber
+    })
+    .then(message => {
+        console.log('Twilio success', message.sid);
+    })
+    .catch(err => {
+        console.log('Twilio err : ', err);
+    });
 }

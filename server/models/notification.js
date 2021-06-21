@@ -43,6 +43,10 @@ const notificationSchema = new Schema(
                 require: true
             },
         },
+        messageSummary: {
+            type: String,
+            require: true
+        },
         message: {
             type: String,
             require: true

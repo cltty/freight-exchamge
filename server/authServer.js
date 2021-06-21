@@ -41,14 +41,10 @@ const db = mongoose.connection;
 db.on('error', (error) => console.error(error));
 db.once('open', () => console.log('>> Authentification Server Connected to Database'.magenta.bold));
 
-
 app.listen(
     PORT,
     console.log(`Auth Server is running on ${process.env.NODE_ENV} MODE on port ${PORT}`.red.bold)
 );
-
-// store in db
-// let refreshTokens = [];
 
 // used for refreshing auth token
 app.post('/token', (req, res) => {
@@ -70,8 +66,6 @@ app.delete('/logout', (req, res) => {
 });
 
 app.post('/login', async(req, res) => {
-    console.log("authServer >> login".green);
-    console.log(">> req.body >> ", req.body);
     try {
         user = await User.findOne({ emailAddress: req.body.emailAddress })
         if (user === null) {
@@ -80,7 +74,8 @@ app.post('/login', async(req, res) => {
             if (isEqual(user, req.body)) {
                 const userObjToBePassed = {
                     userId: user._id,
-                    companyType: user.companyType
+                    companyType: user.companyType,
+                    companyProfileCreated: user.companyProfileCreated
                 }
     
                 const accessToken = generateAccessToken(userObjToBePassed);

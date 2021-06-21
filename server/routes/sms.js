@@ -9,7 +9,6 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
 
 router.post('/', (req, res) => {
-    console.log("Sending SMS...");
     client.messages
     .create({
         body: req.body.message,

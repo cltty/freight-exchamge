@@ -27,11 +27,12 @@ router.post('/', async (req, res) => {
     const user = new User({
         emailAddress: req.body.emailAddress,
         password: req.body.password,
-        companyType: req.body.companyType
+        companyProfileCreated: false
     });
 
     try {
         const newUser = await user.save();
+
         res.status(201).json(newUser);
     } catch(err) {
         res.status(400).json({ message: err.message });
@@ -59,7 +60,6 @@ router.patch('/:id', [authenticateToken, getUser], async (req, res) => {
 });
 
 // Update temporaryBanned prop by ID
-// Admin middleware must be implemented
 router.patch('/temporary-ban/:id', [authenticateToken, adminRights, getUser], async (req, res) => {
     res.user.temporaryBanned = req.body.temporaryBanned;
 
@@ -95,9 +95,4 @@ async function getUser(req, res, next) {
 
     res.user = user;
     next();
-}
-
-// admin middleware
-async function adminRights(req, res, next) {
-    // To do..
 }

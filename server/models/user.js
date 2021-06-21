@@ -12,9 +12,9 @@ const userSchema = new Schema(
             type: String,
             required: true
         },
-        temporaryBanned: {
-            type: String,
-            required: false
+        companyProfileCreated: {
+            type: Boolean,
+            required: true
         },
         companyType: {
             type: String,

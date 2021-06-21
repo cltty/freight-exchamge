@@ -14,17 +14,10 @@ router.get('/', async (req, res) => {
     }
 });
 
-
 // Get all available loads
 router.get('/booked/false', getAvailableLoads, (req, res) => {
     res.send(res.loads);
 })
-
-
-// // Get all loads by booked flag
-// router.get('/booked/:bookedflag', getLoadsByBookedFlag, (req, res) => {
-//     res.send(res.loads);
-// });
 
 // Get all booked loads by carrier id
 router.get('/booked/true/:carrierId', getBookedLoadsByCarrierId, (req, res) => {
@@ -64,13 +57,11 @@ router.post('/', async (req, res) => {
         origin: {
             city: req.body.origin.city,
             country: req.body.origin.country,
-            zipcode: req.body.origin.zipcode,
             arrival: req.body.origin.arrival
         },
         destination: {
             city: req.body.destination.city,
             country: req.body.destination.country,
-            zipcode: req.body.destination.zipcode,
             arrival: req.body.destination.arrival
         },
         distance: req.body.distance,
@@ -122,7 +113,7 @@ router.patch('/cancel/:loadId',  getLoadById, async (req, res) => {
 // reject load
 router.patch('/reject/:loadId',  getLoadById, async (req, res) => {
     res.load.rejected = true;
-
+    
     try {
         const updatedLoad = await res.load.save();
         res.json(updatedLoad);

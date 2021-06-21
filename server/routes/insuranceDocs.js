@@ -8,8 +8,6 @@ module.exports = router;
 router.use(express.urlencoded({ extended: true }));
 
 router.post('/documents/insurance', (req, res) => {
-    console.log("Post >> /file-upload");
-
     if (req.body.files === undefined || req.body.files?.length === 0) {
         res.status(400);
         res.send('No files sent!');

@@ -7,6 +7,10 @@ const reportSchema = new Schema(
             type: String,
             required: true
         },
+        reasonSummary: {
+            type: String,
+            required: true
+        },
         userId: {
             type: String,
             required: true

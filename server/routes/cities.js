@@ -1,32 +1,37 @@
 const express = require('express');
 const router = express.Router();
-const unirest = require("unirest");
-const citiesReq = unirest("GET", "https://ip-geo-location.p.rapidapi.com/ip/check");
+const dotenv = require('dotenv').config();
+const distance = require('google-distance-matrix');
 
 module.exports = router;
 
-// Get all
-router.get('/', (req, res) => {
-    citiesReq.query({
-        "format": "json"
-    });
-    
-    citiesReq.headers({
-        "x-rapidapi-key": "c51cc0ffdbmsh65c40bea33ecdcdp12dadcjsn3485f4c0897f",
-        "x-rapidapi-host": "ip-geo-location.p.rapidapi.com",
-        "useQueryString": true
-    });
-    
-    
-    citiesReq.end(function (citiesRes) {
-        // if (citiesRes.error) throw new Error(citiesRes.error);
-        if (citiesRes.error) {
-            res.status(400).json({ message: citiesRes });
-            return;
-        }
-        
+distance.key('AIzaSyD_z2Q7vsuwFFrwHtEPPOh1O7CqVO_8VbA');
+distance.units('metric');
 
-        // console.log(rcitiesRes.body);
-        res.send(citiesRes);
+router.post('/', async (req, res) => {
+    let origins = [];
+    origins.push(req.body.origins);
+    
+    let destinations = [];
+    destinations.push(req.body.destinations);
+
+    await distance.matrix(origins, destinations, function (err, distances) {
+        if (err) {
+            res.statusCode(500);
+        }
+        if (distances.status == 'OK') {
+            for (var i = 0; i < origins.length; i++) {
+                for (var j = 0; j < destinations.length; j++) {
+                    var origin = distances.origin_addresses[i];
+                    var destination = distances.destination_addresses[j];
+                    if (distances.rows[0].elements[j].status == 'OK') {
+                        var distance = distances.rows[i].elements[j].distance.text;
+                        res.status(200).send({ distance: distance });
+                    } else {
+                        res.status(500).send({ distance: 'Not reachable' });
+                    }
+                }
+            }
+        }
     });
 });

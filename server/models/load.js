@@ -65,10 +65,6 @@ const loadSchema = new Schema(
                 type: String,
                 required: true,
             },
-            zipcode: {
-                type: String,
-                required: true,
-            },
             arrival: {
                 type: String,
                 required: true
@@ -83,17 +79,13 @@ const loadSchema = new Schema(
                 type: String,
                 required: true,
             },
-            zipcode: {
-                type: String,
-                required: true,
-            },
             arrival: {
                 type: String,
                 required: true
             }
         },
         distance: {
-            type: Number,
+            type: String,
             required: true
         },
         equipment: {
