@@ -37,7 +37,6 @@ export class DashboardService {
   }
 
   public createNewLoad(newLoadPayLoad: any) {
-    console.log("createNewLoad >>> payload >>> ", newLoadPayLoad);
     return this.httpClient.post<any>(
       this.ENV + this.CREATE_NEW_LOAD, 
       newLoadPayLoad
@@ -45,7 +44,6 @@ export class DashboardService {
   }
 
   public cancelLoad(loadId: any, reqBody: any) {
-    console.log("cancelLoad, loadId >> ", loadId);
     return this.httpClient.patch<any>(
       this.ENV + this.CANCEL_LOAD(loadId), {
         reqBody
@@ -66,7 +64,6 @@ export class DashboardService {
   }
 
   public getLoadsByCarrierId(carrierId: string) {
-    console.log("getLoadsByCarrierId");
     return this.httpClient.get<any>(
       this.ENV + this.GET_ALL_LOADS_BY_CARRIER_ID(carrierId)
     );
@@ -97,7 +94,6 @@ export class DashboardService {
   }
 
   public createNotification(notificationPayload: any) {
-    console.log('> createNotification() > received payload > ', notificationPayload);
     return this.httpClient.post<any>(
       this.ENV + this.CREATE_NOTIFICATION, {
         notificationPayload
@@ -131,7 +127,6 @@ export class DashboardService {
   }
 
   public getDistanceBetweenCities(payload: any) {
-    console.log("getDistanceBetweenCities, payload >> ", payload);
     return this.httpClient.post<any>(this.ENV + this.GET_DISTANCE_BETWEEN_CITIES, 
       payload
     );

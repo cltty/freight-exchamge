@@ -1,6 +1,7 @@
 <div class="main">
     <div class="top-section" [formGroup]="searchCriteriaForm">
-        <p><strong>Available work opportunities</strong></p>
+        <p *ngIf="availableLoads.length > 0"><strong>Available work opportunities</strong></p>
+        <p *ngIf="availableLoads.length === 0"><strong>No work opportunity available at this moment </strong></p>
     </div>
 
     <div class="bottom-section">

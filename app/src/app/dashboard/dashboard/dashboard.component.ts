@@ -92,6 +92,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       ]);
       
       this.authService.logoutUser().pipe(takeUntil(this.componentDestroyed$)).subscribe(() => {
+        this.userService.resetLocalStorage();
         this.router.navigateByUrl(`/login`);
       });      
       

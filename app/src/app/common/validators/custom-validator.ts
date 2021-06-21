@@ -17,9 +17,16 @@ export class CustomValidators {
         };
     }
 
+    public static onlyDigits(): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: boolean } | null => {
+            return (/^\d+$/.test(control.value)) 
+                ? null : { onlyDigitsError: true };  
+        };
+    }
+
     public static postCodeValidator(formGroup: FormGroup): { [key: string]: boolean} | null {
-        return formGroup.get('countryName').value &&
-            !postcodeValidator(formGroup.get('postcode')?.value, formGroup.get('countryName')?.value.code)
+        return formGroup.get('country').value &&
+            !postcodeValidator(formGroup.get('postcode')?.value, formGroup.get('country')?.value.code)
             ? { invalidPostcode: true }
             : null;
     }

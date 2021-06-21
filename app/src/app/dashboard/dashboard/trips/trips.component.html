@@ -13,7 +13,7 @@
     <div class="work-opportunities">
         <div class="work-opportunities" *ngFor="let workOpportunity of loads;let i = index">
             <div class="work-opportunity">
-                <mat-expansion-panel hideToggle [ngClass]="workOpportunity.cancelled || workOpportunity.rejected ? 'cancelled-trip' : workOpportunity.booked.isBooked ? 'booked-trip' : ''">
+                <mat-expansion-panel hideToggle [ngClass]="workOpportunity.cancelled || workOpportunity.rejected ? 'cancelled-trip' : (companyType === 'Shipper' && workOpportunity.booked.isBooked) ? 'booked-trip' : ''">
                     <mat-expansion-panel-header>
                         <mat-panel-title class="panel-title">
                             <div class="origin">
@@ -51,7 +51,7 @@
                                     {{ workOpportunity.payout }} €
                                 </div>
                             </div>
-                            <div *ngIf="!workOpportunity.cancelled && !workOpportunity.rejected && workOpportunity.booked.isBooked" class="booked-flag">
+                            <div *ngIf="companyType === 'Shipper' && !workOpportunity.cancelled && !workOpportunity.rejected && workOpportunity.booked.isBooked" class="booked-flag">
                                 <p>Booked</p>
                             </div>
                             <div class="action-btn">

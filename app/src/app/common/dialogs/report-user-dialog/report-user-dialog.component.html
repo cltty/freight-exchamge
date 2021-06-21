@@ -1,0 +1,53 @@
+<div class="modal" [@dialogAnimation] >
+    <div class="modal__container">
+        <div class="dialog-header">
+            <p *ngIf="companyProfile.companyDetails.companyType === 'Carrier'">Report shipper</p>
+            <p *ngIf="companyProfile.companyDetails.companyType === 'Shipper'">Report carrier</p>
+            
+            <mat-icon aria-hidden="false" aria-label="dialog-close" (click)="onClose()">close</mat-icon>
+        </div>
+        <div class="form" [formGroup]="reportUserForm">
+            <mat-form-field class="form__input-field">
+                <mat-label>Reason</mat-label>
+
+                <mat-select *ngIf="companyProfile.companyDetails.companyType === 'Carrier'" formControlName="messageSummary" single (selectionChange)="inputChangeMessageSummary($event)">
+                    <mat-option *ngFor="let option of reportShipperOptions" [value]="option">
+                    {{ option }}
+                    </mat-option>
+                </mat-select>
+
+                <mat-select *ngIf="companyProfile.companyDetails.companyType === 'Shipper'" formControlName="messageSummary" single (selectionChange)="inputChangeMessageSummary($event)">
+                    <mat-option *ngFor="let option of reportCarrierOptions" [value]="option">
+                    {{ option }}
+                    </mat-option>
+                </mat-select>
+
+                <mat-error *ngIf="messageSummary.touched &&  messageSummary.errors?.required">
+                    Reason is required.
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="form__input-field" [style.fontSize]="12">
+                <mat-label>Further explain your reason</mat-label>
+                <textarea formControlName="message"
+                        [value]="message.value"
+                        matInput
+                        cdkTextareaAutosize
+                        #autosize="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="5"
+                        (input)="inputChange($event)">
+                </textarea>
+                <mat-error *ngIf="message.touched &&  message.errors?.required">
+                    Explaining your report reason is required.
+                </mat-error>
+            </mat-form-field>
+            
+        </div>
+        <div class="action-btns" [ngClass]="reportUserForm.valid ? 'submit-btn-enabled' : 'submit-btn-disabled'">
+            <button mat-button (click)="onClose()">Cancel</button>
+            <button mat-button [disabled]="!reportUserForm.valid" (click)="onSubmit()">Report</button>  
+        </div>
+    </div>
+</div>
+<div class="modal-background" [@modalBgFadeIn]></div>

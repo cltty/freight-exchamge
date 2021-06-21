@@ -33,7 +33,17 @@
         <mat-error *ngIf="wrongCredentials">
             Wrong <strong>email address</strong> or <strong>password</strong> used!
         </mat-error>
-        <button mat-raised-button class="login-form__btn" color="primary" (click)="submitForm()">Login</button>
+        <button 
+            mat-raised-button
+            class="login-form__btn"
+            color="primary"
+            (click)="submitForm()"
+            [disabled]='emailAddress.errors
+            || password.errors
+            || recaptcha.errors'
+            >
+            Login
+        </button>
     </form>
 
     <!-- <div class="info-container">

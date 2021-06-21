@@ -1,19 +1,19 @@
-<mat-horizontal-stepper #stepper class="stepper-container" [ngClass]="displaySpinner ? 'main-with-no-background' : 'stepper-container'">
+<mat-horizontal-stepper #stepper class="stepper-container">
   <mat-step [stepControl]="companyDetailsForm" errorMessage="Filling in company details is mandatory.">
     <form class="stepper-container__stepper-one" [formGroup]="companyDetailsForm">
       <ng-template matStepLabel>Company Details</ng-template>
       
       <div class="form">
         <div class="form__left-column">
-          <mat-form-field  class="stepper-container__stepper-one--company-legal-name">
+          <mat-form-field  class="stepper-container__stepper-one--input">
             <mat-label>Company legal name</mat-label>
             <input matInput (input)="inputChangeCompanyDetailsForm($event, 'companyLegalName')" formControlName="companyLegalName" required>
           </mat-form-field>
           <mat-error *ngIf="companyLegalName.errors?.invalidCharacters">
             Invalid characters used, such as !, #, <> etc.   
           </mat-error>
-
-          <mat-form-field class="stepper-container__stepper-one--company-type" appearance="fill">
+          
+          <mat-form-field class="stepper-container__stepper-one--input" appearance="fill">
             <mat-label>Company type</mat-label>
             <mat-select formControlName="companyType" single (selectionChange)="inputChangeCompanyDetailsForm($event, 'companyType')">
               <mat-option *ngFor="let companyType of companyTypes" [value]="companyType">
@@ -22,84 +22,7 @@
             </mat-select>
           </mat-form-field>
         
-          <mat-form-field class="stepper-container__stepper-one--address-line-1">
-            <mat-label>Address line 1</mat-label>
-            <input matInput (input)="inputChangeCompanyDetailsForm($event, 'addressLine1')" formControlName="addressLine1" required>
-          </mat-form-field>
-          <mat-error *ngIf="addressLine1.errors?.invalidCharacters">
-            Invalid characters used, such as !, #, <> etc.   
-          </mat-error>
-          
-          <div class="left-column__item">
-            <mat-form-field class="stepper-container__stepper-one--city">
-              <mat-label>Town/City</mat-label>
-              <input matInput (input)="inputChangeCompanyDetailsForm($event, 'city')" formControlName="city" required>
-            </mat-form-field>
-            <mat-error *ngIf="city.errors?.invalidCharacters">
-              Invalid characters used, such as !, #, <> etc.   
-            </mat-error>
-          
-            <mat-form-field class="stepper-container__stepper-one--state">
-              <mat-label>State (optional)</mat-label>
-              <input matInput (input)="inputChangeCompanyDetailsForm($event, 'state')" formControlName="state">
-            </mat-form-field>
-            <mat-error *ngIf="state.errors?.invalidCharacters">
-              Invalid characters used, such as !, #, <> etc.   
-            </mat-error>
-          </div>
-  
-          <mat-form-field class="stepper-container__stepper-one--company-VAT">
-            <mat-label>VAT number</mat-label>
-            <input matInput (input)="inputChangeCompanyDetailsForm($event, 'vatNumber')" formControlName="vatNumber" required>
-          </mat-form-field>
-          <mat-error *ngIf="vatNumber.errors?.invalidCharacters">
-            Invalid characters used, such as !, #, <> etc.   
-          </mat-error>
-          <mat-error *ngIf="displayInvalidVatNumberError">
-            {{ invalidVatNumberError }}   
-          </mat-error>
-
-        </div>
-
-        <div class="form__right-column">
-          <mat-form-field class="stepper-container__stepper-one--country-name" appearance="fill">
-            <mat-label>Country</mat-label>
-            <mat-select formControlName="countryName" single (selectionChange)="inputChangeCompanyDetailsForm($event, 'countryName')">
-              <mat-option *ngFor="let country of contriesList" [value]="country">
-                {{ country.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <!-- <mat-form-field class="stepper-container__stepper-one--domiciles" appearance="fill">
-            <mat-label>Domicile(s)</mat-label>
-            <mat-select formControlName="domiciles" single (selectionChange)="inputChangeCompanyDetailsForm($event, 'domiciles')">
-              <mat-option *ngFor="let country of contriesList" [value]="country">
-                {{ country.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field> -->
-
-          <mat-form-field class="stepper-container__stepper-one--address-line-2">
-            <mat-label>Address line 2 (optional)</mat-label>
-            <input matInput (input)="inputChangeCompanyDetailsForm($event, 'addressLine2')" formControlName="addressLine2">
-          </mat-form-field>
-          <mat-error *ngIf="addressLine2.errors?.invalidCharacters">
-            Invalid characters used, such as !, #, <> etc.   
-          </mat-error>
-
-          <mat-form-field class="stepper-container__stepper-one--postcode">
-            <mat-label>Postcode</mat-label>
-            <input matInput (input)="inputChangeCompanyDetailsForm($event, 'postcode')" formControlName="postcode" required>
-          </mat-form-field>
-          <mat-error *ngIf="postcode.errors?.invalidCharacters">
-            Invalid characters used, such as !, #, <> etc.   
-          </mat-error>
-          <mat-error *ngIf="companyDetailsForm.errors?.invalidPostcode && postcode.touched">
-            Invalid postcode   
-          </mat-error>
-
-          <mat-form-field class="stepper-container__stepper-one--phone-number">
+          <mat-form-field class="stepper-container__stepper-one--input">
             <mat-label>Phone number</mat-label>
             <input matInput (input)="inputChangeCompanyDetailsForm($event, 'phoneNumber')" formControlName="phoneNumber" required>
           </mat-form-field>
@@ -109,15 +32,67 @@
           <mat-error *ngIf="phoneNumber.errors?.invalidPhoneNumber && phoneNumber.touched">
             Invalid phone number   
           </mat-error>
+          <mat-error *ngIf="phoneNumber.touched && phoneNumber.errors?.onlyDigitsError">
+            Please use only digits 
+          </mat-error>
 
-          <div>
-            <button mat-button matStepperNext 
-              [disabled]="hasCompanyDetailsFormErrors() ? 'true' : 'false'" (click)="checkFormForErrors()">Next</button>
+          <mat-form-field class="stepper-container__stepper-one--input">
+            <mat-label>VAT number</mat-label>
+            <input matInput (input)="inputChangeCompanyDetailsForm($event, 'vatNumber')" formControlName="vatNumber" required>
+          </mat-form-field>
+          <mat-error *ngIf="vatNumber.errors?.invalidCharacters">
+            Invalid characters used, such as !, #, <> etc.   
+          </mat-error>
+          <mat-error *ngIf="vatNumber.touched && vatNumber.errors?.onlyDigitsError">
+            Please use only digits 
+          </mat-error>
+          <mat-error *ngIf="vatNumber.touched && vatNumber.errors?.invalidVatNumber">
+            Invalid VAT number.   
+          </mat-error>
+        </div>
+
+        <div class="form__right-column">
+          <div class="address-section">
+            <div>
+              <p>Address</p>
+              <mat-icon
+                *ngIf="fullAddress.value"
+                (click)="onAddressSelect()"
+                aria-hidden="false" aria-label="Edit address icon">edit</mat-icon>
+            </div>
+  
+            <div *ngIf="!city.value" class="select-origin-address-btn">
+              <button mat-raised-button color="primary" (click)="onAddressSelect()">Select address</button>
+            </div>
+          </div>
+          
+          <div *ngIf="city.value" class="address-input-fields">
+            <div>
+              <mat-form-field class="stepper-container__stepper-one--input">
+                <mat-label>City</mat-label>
+                <input matInput [value]="city.value ? city.value : null">
+              </mat-form-field>
+            </div>
+            
+            <div>
+              <mat-form-field class="stepper-container__stepper-one--input">
+                <mat-label>Country</mat-label>
+                <input matInput [value]="country.value ? country.value : null">
+              </mat-form-field>         
+            </div>
           </div>
 
+          <!-- <div>
+            <button mat-button matStepperNext 
+              [disabled]="hasCompanyDetailsFormErrors() ? 'true' : 'false'" (click)="checkFormForErrors()">Next</button>
+          </div> -->
         </div>
       </div>
-  
+      <div class="stepper-container__stepper-one--action-btn">
+        <!-- (click)="checkFormForErrors()" -->
+        <button mat-button matStepperNext 
+          [disabled]="hasCompanyDetailsFormErrors() ? 'true' : 'false'">Next</button>
+      </div>
     </form>
   </mat-step>
 
@@ -140,72 +115,105 @@
         <div class="stepper-container__stepper-two--body-left">
           <div class="eq-inv-input-field">
             <p>Standard tractor unit</p>
-            <mat-form-field>
-              <mat-label>0</mat-label>
-              <input matInput formControlName="standardTractorUnits" required>
-            </mat-form-field>
-            <mat-error *ngIf="standardTractorUnits.errors?.invalidCharacters">
-              Invalid characters used, such as !, #, <> etc.   
-            </mat-error>
+            <div class="equipment-input-wrapper">
+              <mat-form-field>
+                <mat-label>0</mat-label>
+                <input matInput formControlName="standardTractorUnits" required>
+              </mat-form-field>
+              <mat-error *ngIf="standardTractorUnits.errors?.invalidCharacters">
+                Invalid characters used, such as !, #, <> etc.   
+              </mat-error>
+              <mat-error *ngIf="standardTractorUnits.touched && standardTractorUnits.errors?.required">
+                Information required   
+              </mat-error>
+            </div>
           </div>
+          
           <div class="eq-inv-input-field">
             <p>7.5T truck</p>
-            <mat-form-field>
-              <mat-label>0</mat-label>
-              <input matInput formControlName="sevenHalfTrucks" required>
-            </mat-form-field>
-            <mat-error *ngIf="sevenHalfTrucks.errors?.invalidCharacters">
-              Invalid characters used, such as !, #, <> etc.   
-            </mat-error>
+            <div class="equipment-input-wrapper">
+              <mat-form-field>
+                <mat-label>0</mat-label>
+                <input matInput formControlName="sevenHalfTrucks" required>
+              </mat-form-field>
+              <mat-error *ngIf="sevenHalfTrucks.errors?.invalidCharacters">
+                Invalid characters used, such as !, #, <> etc.   
+              </mat-error>
+              <mat-error *ngIf="sevenHalfTrucks.touched &&  sevenHalfTrucks.errors?.required">
+                Information required   
+              </mat-error>
+            </div>
           </div>
+
           <div class="eq-inv-input-field">
             <p>3.5T van with tailift</p>
-            <mat-form-field>
-              <mat-label>0</mat-label>
-              <input matInput formControlName="threeHalfTailiftVans" required>
-            </mat-form-field>
-            <mat-error *ngIf="threeHalfTailiftVans.errors?.invalidCharacters">
-              Invalid characters used, such as !, #, <> etc.   
-            </mat-error>
+            <div class="equipment-input-wrapper">
+              <mat-form-field>
+                <mat-label>0</mat-label>
+                <input matInput formControlName="threeHalfTailiftVans" required>
+              </mat-form-field>
+              <mat-error *ngIf="threeHalfTailiftVans.errors?.invalidCharacters">
+                Invalid characters used, such as !, #, <> etc.   
+              </mat-error>
+              <mat-error *ngIf="threeHalfTailiftVans.touched &&  threeHalfTailiftVans.errors?.required">
+                Information required   
+              </mat-error>
+            </div>
           </div>
+
           <div class="eq-inv-input-field">
             <p>3.5T van without tailift</p>
-            <mat-form-field>
-              <mat-label>0</mat-label>
-              <input matInput formControlName="threeHalfVans" required>
-            </mat-form-field>
-            <mat-error *ngIf="threeHalfVans.errors?.invalidCharacters">
-              Invalid characters used, such as !, #, <> etc.   
-            </mat-error>
+            <div class="equipment-input-wrapper">
+              <mat-form-field>
+                <mat-label>0</mat-label>
+                <input matInput formControlName="threeHalfVans" required>
+              </mat-form-field>
+              <mat-error *ngIf="threeHalfVans.errors?.invalidCharacters">
+                Invalid characters used, such as !, #, <> etc.   
+              </mat-error>
+              <mat-error *ngIf="threeHalfVans.touched &&  threeHalfVans.errors?.required">
+                Information required   
+              </mat-error>
+            </div>
           </div>
         </div>
 
         <div class="stepper-container__stepper-two--body-right">
           <div class="eq-inv-input-field">
             <p>Box trailer</p>
-            <mat-form-field>
-              <mat-label>0</mat-label>
-              <input matInput formControlName="boxTrailers" required>
-            </mat-form-field>
-            <mat-error *ngIf="boxTrailers.errors?.invalidCharacters">
-              Invalid characters used, such as !, #, <> etc.   
-            </mat-error>
+            <div class="equipment-input-wrapper">
+              <mat-form-field>
+                <mat-label>0</mat-label>
+                <input matInput formControlName="boxTrailers" required>
+              </mat-form-field>
+              <mat-error *ngIf="boxTrailers.errors?.invalidCharacters">
+                Invalid characters used, such as !, #, <> etc.   
+              </mat-error>
+              <mat-error *ngIf="boxTrailers.touched &&  boxTrailers.errors?.required">
+                Information required   
+              </mat-error>
+            </div>
           </div>
           
           <div class="eq-inv-input-field">
             <p>Curtain-sided trailer</p>
-            <mat-form-field>
-              <mat-label>0</mat-label>
-              <input matInput formControlName="curtainSidedTrailers" required>
-            </mat-form-field>
-            <mat-error *ngIf="curtainSidedTrailers.errors?.invalidCharacters">
-              Invalid characters used, such as !, #, <> etc.   
-            </mat-error>
+            <div class="equipment-input-wrapper">
+              <mat-form-field>
+                <mat-label>0</mat-label>
+                <input matInput formControlName="curtainSidedTrailers" required>
+              </mat-form-field>
+              <mat-error *ngIf="curtainSidedTrailers.errors?.invalidCharacters">
+                Invalid characters used, such as !, #, <> etc.   
+              </mat-error>
+              <mat-error *ngIf="curtainSidedTrailers.touched &&  curtainSidedTrailers.errors?.required">
+                Information required   
+              </mat-error>
+            </div>
           </div>
         </div>
       </div>
 
-      <div>
+      <div class="stepper-action-btns">
         <button mat-button matStepperPrevious>Back</button>
         <button mat-button matStepperNext
           [disabled]="hasEquipmentInvetoryFormErrors() ? 'true' : 'false'">Next</button>
@@ -254,7 +262,7 @@
         <button mat-raised-button color="primary"  [ngClass]="insuranceDocuments.length === 2 ? 'hide' : null" (click)="fileInput.click()">Select File</button>
       </div>
 
-      <div>
+      <div class="stepper-action-btns">
         <button mat-button matStepperPrevious>Back</button>
         <button mat-button matStepperNext
           [disabled]="haveInsuranceDocumentsErrors() ? 'true' : 'false'">Next</button>
@@ -287,7 +295,7 @@
       
       </div>
 
-      <div>
+      <div class="stepper-action-btns">
         <button mat-button matStepperPrevious>Back</button>
         <button mat-button matStepperNext
           [disabled]="haveOperatingLicenseErrors() ? 'true' : 'false'">Next</button>
@@ -300,8 +308,8 @@
     <form [formGroup]="paymentDetailsForm" class="payment-form">
       <ng-template matStepLabel>Payment</ng-template>
   
-      <p>Add the account where you’d like to receive direct-deposit payments:</p>
-      
+      <p class="payment-input-field">Add the account where you’d like to receive direct-deposit payments:</p>
+      <button (click)="debug()">Debug</button>    
       <mat-form-field class="payment-input-field">
         <mat-label>Account holder name</mat-label>
         <input matInput formControlName="accountHolderName" required (input)="inputChangePaymentDetailsForm($event, 'accountHolderName')">
@@ -329,7 +337,7 @@
         IBAN is invalid   
       </mat-error>
 
-      <div>
+      <div class="stepper-action-btns">
         <button mat-button matStepperPrevious>Back</button>
         <button mat-button matStepperNext
           [disabled]="hasPaymentDetailsFormErrors() ? 'true' : 'false'">Next</button>
@@ -340,8 +348,9 @@
   <mat-step class="stepper-container__stepper-five">
     <ng-template matStepLabel>Done</ng-template>
     <div class="done-container">
-      <p>{{ readyToSubmit }}</p>
-      <button mat-raised-button color="primary" (click)="submitProfile()">Submit</button>
+      <p *ngIf="isReadyForSubmit()"> Now you are ready to submit. </p>
+      <p *ngIf="!isReadyForSubmit()"> Please fill in all the fields. </p>
+      <button  [disabled]="!isReadyForSubmit()" mat-raised-button color="primary" (click)="submitProfile()">Submit</button>
       <div>
         <button mat-button matStepperPrevious>Back</button>
         <button mat-button (click)="stepper.reset()">Reset</button>
@@ -349,7 +358,4 @@
     </div>
   </mat-step>
 </mat-horizontal-stepper>
-
-<div class="spinner" *ngIf="displaySpinner">
-  <mat-spinner [diameter]=160></mat-spinner>
-</div>
+<ng-template #dialog></ng-template>

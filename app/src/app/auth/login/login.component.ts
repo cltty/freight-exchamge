@@ -13,7 +13,7 @@ import { AuthService } from '../auth.service';
 })
 export class LoginComponent implements OnInit {
   public loginForm: FormGroup;
-  public siteKey: string = '6Lf3OPwaAAAAACDAWgSCyUBOer_nSTTSjhY_ATyt';
+  public siteKey;
   public wrongCredentials: boolean = false;
   
   private componentDestroyed$: Subject<void> = new Subject<void>();
@@ -30,18 +30,9 @@ export class LoginComponent implements OnInit {
       recaptcha: ['', Validators.required]
     });
   }
-  // site key -> 6LcLJ_waAAAAABaz4gUmrafxMVuZcNgtHRD6mCvm
-  // secret key -> 6LcLJ_waAAAAADzjGKOLAvRi4w78a4yp1B74H-ea
-
+  
   ngOnInit(): void {
-    this.authService.wrongLoginCredentials$.pipe(takeUntil(this.componentDestroyed$)).subscribe(() => {
-      this.wrongCredentials = true;
-
-      // Display 'Bad email address or password' error for 3 seconds
-      setTimeout(() => {
-        this.wrongCredentials = false;
-      }, 3000);
-    })
+    this.authService.captchaSiteKey$.pipe(takeUntil(this.componentDestroyed$)).subscribe(key => this.siteKey = key);
   }
 
   get emailAddress() {
@@ -52,13 +43,19 @@ export class LoginComponent implements OnInit {
     return this.loginForm.get('password');
   }
 
+  get recaptcha() {
+    return this.loginForm.get('recaptcha');
+  }
+
   public submitForm() {
     this.authService.loginUser(this.computeUserLoginPayload()).subscribe(response => {
-      if (response.companyType === "null") {
+      
+      this.userService.setUserEmailAddress(this.emailAddress.value);
+      this.userService.setUserId(response.userId);
+
+      if (!response.companyProfileCreated) {
         this.router.navigateByUrl('create-profile');
-      }  else {
-        // set user id in place
-        this.userService.setUserId(response.userId);
+      } else {
         this.userService.setCompanyType(response.companyType);
         this.router.navigateByUrl('loadboard');
       }
@@ -73,8 +70,6 @@ export class LoginComponent implements OnInit {
   }
 
   public redirectToRegister() {
-    //disable button
-    //display spinner
     setTimeout(() => {
       this.router.navigate(['get-started/register']);
     }, 700);

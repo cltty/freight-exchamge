@@ -3,6 +3,7 @@ import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CompanyProfile } from 'src/app/auth/create-profile/models/CompanyProfile';
 import { NotificationDialogComponent } from 'src/app/common/dialogs/notification-dialog/notification-dialog.component';
+import { ReportUserDialogComponent } from 'src/app/common/dialogs/report-user-dialog/report-user-dialog.component';
 import { DialogService } from 'src/app/services/dialog-service/dialog.service';
 import { UserService } from 'src/app/user-service/user.service';
 import { DashboardService } from '../../service/dashboard.service';
@@ -42,6 +43,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     this.dashboardService.getUnreadNotifications(this.userService.getUserId())
       .pipe(takeUntil(this.componentDestroyed$))
       .subscribe(unreadNotifications => {
+        console.log('unreadNotifications > ', unreadNotifications);
         this.unreadNotifications = unreadNotifications;
       });
   }
@@ -62,10 +64,85 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     this.openMarkAsReadDialog(index);
   }
 
+  public openNewReportUserDialog(index: any) {
+    this.dialogService.showDialog(this.dialogContainer, ReportUserDialogComponent, [ { name: 'companyProfile', value: this.companyProfile } ]);
+
+    this.dialogService.closeEventEmitter().subscribe(() => {
+      this.dialogService.hideDialog([
+        this.closeDialogEmitterSubscription,
+        this.trueAnswearDialogEmitterSubscription
+      ]);
+
+      console.log("> openNewReportUserDialog > closeEventEmitter");
+    });
+
+    this.dialogService.successEventEmitter().subscribe(response => {
+      this.dialogService.hideDialog([
+        this.closeDialogEmitterSubscription,
+        this.trueAnswearDialogEmitterSubscription
+      ]);
+
+      console.log("> openNewReportUserDialog > successEventEmitter > response : ", response);
+      this.dashboardService.reportUser(this.computeReportPayload(index, response)).pipe(takeUntil(this.componentDestroyed$)).subscribe();
+      this.dashboardService.createNotification(this.computeReportNotificationPayload(index, response)).pipe(takeUntil(this.componentDestroyed$)).subscribe();
+      
+      // createNotification
+      // reportUser
+
+      // this.dashboardService.reportUser(this.computeReportShipperPayload(index)).subscribe();
+      
+      // this.dashboardService.createNotification(this.computeLoadCancelledNotificationPayload(workOpportunity))
+      //         .pipe(takeUntil(this.componentDestroyed$))
+      //         .subscribe();
+    });
+  }
+
+  private computeReportPayload(index, report: any) {
+    console.log('> computeReportPayload()');
+    console.log(">> ", this.unreadNotifications[index]);
+    console.log('> ', this.companyProfile);
+    return {
+      read: false,
+      userId: this.unreadNotifications[index].from.userId,
+      reasonSummary: report.messageSummary,
+      reason: report.message,
+      reportedBy: {
+        userId: this.userService.getUserId(),
+        companyLegalName: this.companyProfile.companyDetails.companyLegalName,
+        companyEmailAddress: this.companyProfile.emailAddress,
+        companyPhoneNumber: this.companyProfile.companyDetails.phoneNumber
+      }
+    }
+  }
+
+  private computeReportNotificationPayload(index, report: any) {
+    console.log('> computeReportNotificationPayload');
+    console.log(">> ", this.unreadNotifications[index]);
+    console.log('> ', this.companyProfile);
+    
+    return {
+      read: false,
+      for: {
+        userId: this.unreadNotifications[index].from.userId,
+        companyLegalName: this.unreadNotifications[index].from.companyLegalName,
+        companyEmailAddress: this.unreadNotifications[index].from.companyEmailAddress,
+        companyPhoneNumber: this.unreadNotifications[index].from.companyPhoneNumber
+      },
+      from: {
+        userId: this.userService.getUserId(),
+        companyLegalName: this.companyProfile.companyDetails.companyLegalName,
+        companyEmailAddress: this.companyProfile.emailAddress,
+        companyPhoneNumber: this.companyProfile.companyDetails.phoneNumber,
+      },
+      messageSummary: "Negative feedback received for: " + report.messageSummary,
+      message: report.message
+    }
+  }
+
   private openReportShipperDialog(index: number, companyName: string) {
     this.dialogService.showDialog(this.dialogContainer, NotificationDialogComponent, this.computeReportUserDialogInputs(companyName));
 
-     this.dialogService.closeEventEmitter().subscribe(() => {
+    this.dialogService.closeEventEmitter().subscribe(() => {
       this.dialogService.hideDialog([
         this.closeDialogEmitterSubscription,
         this.trueAnswearDialogEmitterSubscription
@@ -79,6 +156,10 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       ]);
       
       this.dashboardService.reportUser(this.computeReportShipperPayload(index)).subscribe();
+      
+      // this.dashboardService.createNotification(this.computeLoadCancelledNotificationPayload(workOpportunity))
+      //         .pipe(takeUntil(this.componentDestroyed$))
+      //         .subscribe();
     });
   }
 

@@ -1,0 +1,98 @@
+@import '../../../../styles.scss';
+
+.dialog-header {
+    display: flex;
+    flex-direction: row;
+
+    p {
+        font-size: 20px;
+        padding-top: 30px;
+        padding-left: 38px;
+        margin: auto;
+    }
+
+    mat-icon {
+        margin: 7px 7px 0px 0px;
+        cursor: pointer;
+
+        &:hover {
+            transition: all 0.2s ease-in-out;
+            transform: rotate3d(0, 0, 1, -360deg);
+            color: $material-red;
+        }
+    }
+}
+
+.modal {
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+
+    &__container {
+        margin: auto;
+        margin-top: 200px;
+        background-color: $white;    
+        border-radius: 4px;
+        width: 600px;
+    }
+}
+
+.modal-background {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #24303b;
+    opacity: 0.4;
+    z-index: 900;
+}
+
+.form {
+    margin: auto;
+    width: 600px;
+    padding-top: 30px;
+
+    display: flex;
+    flex-direction: column;
+
+    &__input-field {
+        width: 380px;
+        margin: auto;
+        padding-bottom: 15px;
+    }
+}
+
+.action-btns {
+    padding: 20px 120px 20px 0px;
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+        cursor: pointer;
+    }
+
+    button:hover {
+        transition: all 0.2s ease-in-out;
+
+        &:nth-child(1) {
+            color: $material-red;
+        }
+    }
+}
+
+.submit-btn-enabled {
+    button:hover:nth-child(2) {
+        color: $light-green;
+    }
+}
+
+.submit-btn-disabled {
+    button {
+        cursor: not-allowed;
+    }
+}

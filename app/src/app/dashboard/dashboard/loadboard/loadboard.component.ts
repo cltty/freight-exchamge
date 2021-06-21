@@ -87,7 +87,7 @@ export class LoadboardComponent implements OnInit {
         .subscribe(
           () => {
             setTimeout(() => {
-              this.openLoadBookedDialog();    
+              this.openLoadBookedDialog(index);    
             }, 1000);
           },
           () => {
@@ -106,7 +106,7 @@ export class LoadboardComponent implements OnInit {
     }
   }
 
-  private openLoadBookedDialog() {
+  private openLoadBookedDialog(index: number) {
     this.dialogService.showDialog(this.dialogContainer, NotificationDialogComponent, this.computeLoadBookedDialogInputs());
 
     this.dialogService.closeEventEmitter().subscribe(() => {
@@ -115,7 +115,9 @@ export class LoadboardComponent implements OnInit {
         this.afirmativeAnswearDialogEmitterSubscription
       ]);
 
-      this.getAllUnbookedLoads();  
+      this.dashboardService.createNotification(this.computeLoadBookedNotificationPayload(index)).pipe(takeUntil(this.componentDestroyed$)).subscribe();
+      
+      this.getAllUnbookedLoads();
     });
 
     this.dialogService.trueEventEmitter().subscribe(() => {
@@ -123,7 +125,9 @@ export class LoadboardComponent implements OnInit {
         this.closeDialogEmitterSubscription,
         this.afirmativeAnswearDialogEmitterSubscription
       ]);
-
+      
+      this.dashboardService.createNotification(this.computeLoadBookedNotificationPayload(index)).pipe(takeUntil(this.componentDestroyed$)).subscribe();
+      
       this.getAllUnbookedLoads();
     });
   }
@@ -148,6 +152,27 @@ export class LoadboardComponent implements OnInit {
 
       this.getAllUnbookedLoads();
     });
+  }
+
+  private computeLoadBookedNotificationPayload(index: number) {
+    return {
+      read: false,
+      for: {
+        userId: this.availableLoads[index].shipperDetails.shipperId,
+        companyLegalName: this.availableLoads[index].shipperDetails.shipperName,
+        companyEmailAddress: this.availableLoads[index].shipperDetails.shipperEmailAddress,
+        companyPhoneNumber: this.availableLoads[index].shipperDetails.shipperPhoneNumber
+      },
+      from: {
+        userId: this.userService.getUserId(),
+        companyLegalName: this.companyProfile.companyDetails.companyLegalName,
+        companyEmailAddress: this.companyProfile.emailAddress,
+        companyPhoneNumber: this.companyProfile.companyDetails.phoneNumber,
+      },
+      messageSummary: "Load booked by " + this.companyProfile.companyDetails.companyLegalName,
+      message: "Load " + this.availableLoads[index].origin.city + "("+ this.availableLoads[index].origin.arrival + ")" + " - " + this.availableLoads[index].destination.city
+        + "("+ this.availableLoads[index].destination.arrival + ")" + " has just been booked"
+    }
   }
 
   private computeConfirmationDialogInputs() {

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { CompanyProfile } from './create-profile/models/CompanyProfile';
 
 const env = 'http://localhost:3000/';
@@ -15,6 +15,8 @@ export class AuthService {
   private readonly LOGIN_URL: string = '/login';
   private readonly LOGOUT_URL: string = '/logout';
   
+  public captchaSiteKey$: BehaviorSubject<string> = new BehaviorSubject<string>("6Lf3OPwaAAAAACDAWgSCyUBOer_nSTTSjhY_ATyt");
+
   public wrongLoginCredentials$: Subject<void> = new Subject<void>();
 
   constructor(
@@ -34,16 +36,15 @@ export class AuthService {
   }
 
   public createUser(requestPayload: any) {
-    console.log("CREATE PAYLOAD : ", requestPayload);
     return this.httpClient.post<any>(
-      env + 'user', requestPayload
+      env + 'users', requestPayload
     );
   }
 
-public createShipperProfile(profilePayload: CompanyProfile) {
-  return this.httpClient.post<any>(
-    env + 'create/shipper', profilePayload
-  );
+  public createShipperProfile(profilePayload: CompanyProfile) {
+    return this.httpClient.post<any>(
+      env + 'create/shipper', profilePayload
+    );
   }
 
 public createCarrierProfile(profilePayload: CompanyProfile) {
@@ -52,17 +53,7 @@ public createCarrierProfile(profilePayload: CompanyProfile) {
   );
 }
 
-public getUserMailAddress() {
-  return "dummyData@gmail.com";
-}
-
-  /**
-   * When creating user profile, on the backend creation
-   * of the SCAC code has to be handled
-   * 
-   * on BE getUser & getProfile will be by email address 
-   * email adress being the common key between the two collections
-   * 
-   * 
-   */
+// public getUserMailAddress() {
+//   return "dummyData@gmail.com";
+// }
 }

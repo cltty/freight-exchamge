@@ -5,9 +5,9 @@ $shadow-color: #404040;
 $green: #2eb82e;
 
 .stepper-container {
+    width: 1450px;
     border: 1px solid #F0F0F0;
     padding-bottom: 40px;
-    // width: 400px;
     margin: auto;
     background-color: white;
     border-radius: 4px;
@@ -36,29 +36,16 @@ $green: #2eb82e;
         display: flex;
         flex-direction: column;
 
-        &--country-name {
-            width: 380px;
-        }
-
-        &--city {
-            margin-right: 20px;
-        }
-
-        &--phone-number {
+        &--input {
             width: 380px;
             margin-right: 20px;
         }
 
-        &--domiciles {
-            width: 380px;
-        }
-
-        &--address-line-2 {
-            width: 380px;            
-        }
-
-        &--postcode {
-            width: 380px;
+        &--action-btn {
+            width: 800px;
+            display: flex;
+            justify-content: flex-end;
+            margin: auto;
         }
     }
 
@@ -124,8 +111,6 @@ $green: #2eb82e;
             }
         }
     }
-
-   
 }
 
 .left-column {
@@ -152,9 +137,8 @@ $green: #2eb82e;
     }
 
     &__body {
-        .uploaded-files-container {
-            // width: 300px;
 
+        .uploaded-files-container {
             &__item {
                 background: $material-purple;
                 border-radius: 6px;
@@ -203,13 +187,8 @@ $green: #2eb82e;
     margin: auto;
 
     &__body {
+
         .operating-license-container {
-            // width: 300px;
-
-            &__header {
-                // color: $green;
-            }
-
             &__item {
                 background: $material-purple;
                 border-radius: 6px;
@@ -273,7 +252,8 @@ $green: #2eb82e;
 }
 
 .payment-input-field {
-    width: 280px;
+    margin: auto;
+    width: 380px;
 }
 
 .done-container {
@@ -307,4 +287,52 @@ $green: #2eb82e;
     display: flex;
     justify-content: center;
     transition:all 0.5s ease;
+}
+
+.address-section {
+    font-weight: 400;
+    font-size: 20px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+
+    div:nth-child(1) {
+        display: flex;
+        flex-direction: row;        
+    }
+
+    mat-icon {
+        cursor: pointer;
+        font-size: 18px;
+        margin-left: 8px;
+        margin-top: 3px;
+        
+        &:hover {
+            font-size: 20px;
+            transition: all 0.1s ease-in-out;
+            color: $material-red;
+        }
+    }
+}
+
+.equipment-input-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.stepper-action-btns {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 200px;
+    margin: auto;
+}
+
+.fx-form-input {
+    width: 380px;
+    margin-right: 20px;
+}
+
+.margin-auto-el {
+    margin: auto;
 }

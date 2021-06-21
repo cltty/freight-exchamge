@@ -15,9 +15,14 @@
         </div>
 
         <div class="top-section__right">
-            <p>
+            <p *ngIf="performance">
                 {{ performance }} %
             </p>
+
+            <p *ngIf="!performance">
+                -
+            </p>
+            
         </div>
     </div>
 

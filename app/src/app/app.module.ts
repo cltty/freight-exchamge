@@ -47,6 +47,10 @@ import { GooglePlaceModule } from "ngx-google-places-autocomplete";
 import { AddressDialogComponent } from './common/dialogs/address-dialog/address-dialog.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
+import { MatDatetimepickerModule, MatNativeDatetimeModule } from "@mat-datetimepicker/core";
+import { ReportUserDialogComponent } from './common/dialogs/report-user-dialog/report-user-dialog.component';
+import { TextFieldModule } from '@angular/cdk/text-field';
 
 @NgModule({
   declarations: [
@@ -66,7 +70,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     CommonDialogComponent,
     NotificationDialogComponent,
     NewLoadDialogComponent,
-    AddressDialogComponent
+    AddressDialogComponent,
+    ReportUserDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -99,7 +104,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     GooglePlaceModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatTooltipModule
+    MatTooltipModule,
+    NgxMatDatetimePickerModule,
+    NgxMatTimepickerModule,
+    MatDatetimepickerModule,
+    MatNativeDatetimeModule,
+    TextFieldModule
   ],
   providers: [
     HttpClientModule,

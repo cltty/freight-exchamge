@@ -128,3 +128,13 @@
         }
     }
 }
+
+.notification-message {
+    display: flex;
+    flex-direction: column;
+    margin-left: 123px;
+
+    div:nth-child(1) {
+        font-weight: 600;
+    }
+}

@@ -7,7 +7,6 @@ import { NewLoadDialogComponent } from 'src/app/common/dialogs/new-load-dialog/n
 import { NotificationDialogComponent } from 'src/app/common/dialogs/notification-dialog/notification-dialog.component';
 import { DialogService } from 'src/app/services/dialog-service/dialog.service';
 import { UserService } from 'src/app/user-service/user.service';
-import { CreateLoadDialogComponent } from '../../create-load-dialog/create-load-dialog.component';
 import { Load } from '../../models/load';
 import { Notification } from '../../models/notification';
 import { DashboardService } from '../../service/dashboard.service';
@@ -41,12 +40,6 @@ export class TripsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCompanyType();
-
-    // this.dashboardService.createNewLoad$
-    //   .pipe(takeUntil(this.componentDestroyed$))
-    //   .subscribe(newLoadPayLoad => {
-    //     this.createNewLoad(newLoadPayLoad);
-    //   });
   }
 
   private getLoads() {
@@ -59,7 +52,6 @@ export class TripsComponent implements OnInit {
         this.getShipperCreatedLoads();
       }
     }
-
   }
 
   private getShipperCreatedLoads() {
@@ -78,60 +70,10 @@ export class TripsComponent implements OnInit {
       });
   }
 
-
   private getCompanyType() {
     this.companyType = this.userService.getCompanyType();
     this.getLoads();
   }
-
-  // public onAddLoad() {
-  //   const dialogRef = this.dialog.open(CreateLoadDialogComponent);
-
-  //   dialogRef.afterClosed().pipe(takeUntil(this.componentDestroyed$)).subscribe(result => {
-  //     console.log(`Dialog result: ${result}`);
-  //   });
-  // }
-
-  // private computeNewLoadPayload(newLoad: any) {
-  //   return {
-  //     shipperDetails: {
-  //       shipperId: this.companyProfile.userId,
-  //       shipperName: this.companyProfile.companyDetails.companyLegalName,
-  //       shipperPhoneNumber: this.companyProfile.companyDetails.phoneNumber,
-  //       shipperEmailAddress: this.companyProfile.emailAddress
-  //     },
-  //     booked: {
-  //       isBooked: false,
-  //       carrierId: null,
-  //     },
-  //     origin: {
-  //       city: newLoad.originCity,
-  //       country: newLoad.originCountry,
-  //       zipcode: newLoad.originZipcode,
-  //       arrival: newLoad.originArrival
-  //     },
-  //     destination: {
-  //       city: newLoad.destinationCity,
-  //       country: newLoad.destinationCountry,
-  //       zipcode: newLoad.destinationZipcode,
-  //       arrival: newLoad.destinationArrival
-  //     },
-  //     distance: newLoad.distance,
-  //     payout: newLoad.payout,
-  //     equipment: {
-  //       equipment: newLoad.equipment,
-  //       isRequired: newLoad.isEquipmentRequired
-  //     }
-  //   }
-  // }
-
-  // public createNewLoad(newLoadPayLoad) {
-  //   this.dashboardService.createNewLoad(this.computeNewLoadPayload(newLoadPayLoad)).subscribe(response => {
-  //     setTimeout(() => {
-  //       this.getShipperCreatedLoads();
-  //     }, 1000);
-  //   });
-  // }
 
   public cancelLoad(index: number, workOpportunity: any) {
     this.openCancelLoadDialog(index, workOpportunity);
@@ -159,7 +101,7 @@ export class TripsComponent implements OnInit {
       
       this.dashboardService.cancelLoad(this.loads[index]._id, workOpportunity).pipe(takeUntil(this.componentDestroyed$)).subscribe(() => {
         setTimeout(() => {
-          if (workOpportunity.booked) {
+          if (workOpportunity.booked.isBooked) {
             this.dashboardService.createNotification(this.computeLoadCancelledNotificationPayload(workOpportunity))
               .pipe(takeUntil(this.componentDestroyed$))
               .subscribe();
@@ -185,8 +127,7 @@ export class TripsComponent implements OnInit {
       ]);
       
       this.openSuccessfullyCreatedLoadDialog();
-    });
-    
+    }); 
   }
 
   private openRejectLoadDialog(index: number) {
@@ -265,6 +206,8 @@ export class TripsComponent implements OnInit {
         this.closeDialogEmitterSubscription,
         this.trueAnswearDialogEmitterSubscription
       ]);
+
+      this.getShipperCreatedLoads();
     });
 
     this.dialogService.trueEventEmitter().subscribe(() => {
@@ -272,6 +215,8 @@ export class TripsComponent implements OnInit {
         this.closeDialogEmitterSubscription,
         this.trueAnswearDialogEmitterSubscription
       ]);
+
+      this.getShipperCreatedLoads();
     });
   }
 
@@ -279,7 +224,7 @@ export class TripsComponent implements OnInit {
     return [
       {
         name: 'headerText',
-        value: 'Are you sure you want you cancel this load?'
+        value: 'Are you sure you want to cancel this load?'
       },
       {
         name: 'leftButtonText',
@@ -304,7 +249,7 @@ export class TripsComponent implements OnInit {
     return [
       {
         name: 'headerText',
-        value: 'Are you sure you want you reject this load?'
+        value: 'Are you sure you want to reject this load?'
       },
       {
         name: 'leftButtonText',
@@ -387,6 +332,7 @@ export class TripsComponent implements OnInit {
       },
     ];
   }
+
   private computeLoadCancelledNotificationPayload(workOpportunity: any): Notification {
     return {
       read: false,
@@ -402,7 +348,7 @@ export class TripsComponent implements OnInit {
         companyEmailAddress: workOpportunity.shipperDetails.shipperEmailAddress,
         companyPhoneNumber: workOpportunity.shipperDetails.shipperPhoneNumber
       },
-      messageSummary: "Load cancelled",
+      messageSummary: "Load cancelled " + workOpportunity.origin.city + " - " + workOpportunity.destination.city,
       message: this.computeLoadCancelledNotificationMessage(workOpportunity)
     }
   }

@@ -9,9 +9,10 @@ import { CompanyProfile } from 'src/app/auth/create-profile/models/CompanyProfil
 export class CompanyAccountComponent implements OnInit {
   @Input()
   public companyProfile: CompanyProfile;
-  
+
   constructor() { }
 
   ngOnInit(): void {
   }
+
 }

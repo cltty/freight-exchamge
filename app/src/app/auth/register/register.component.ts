@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { ReCaptcha2Component } from 'ngx-captcha';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { NotificationDialogComponent } from 'src/app/common/dialogs/notification-dialog/notification-dialog.component';
-import { CustomValidators } from 'src/app/common/validators/custom-validator';
 import { DialogService } from 'src/app/services/dialog-service/dialog.service';
 import { AuthService } from '../auth.service';
 
@@ -17,13 +17,11 @@ export class RegisterComponent implements OnInit {
   @ViewChild('dialog', { read: ViewContainerRef })
   public dialogContainer: ViewContainerRef;
 
-  public siteKey: string = '6Lf3OPwaAAAAACDAWgSCyUBOer_nSTTSjhY_ATyt';
+  @ViewChild('captchaElem') captchaElem: ReCaptcha2Component;
+
+  public siteKey;//: string = '6Lf3OPwaAAAAACDAWgSCyUBOer_nSTTSjhY_ATyt';
   
   public registerForm: FormGroup;
-  public displaySpinner: boolean = false;
-  public hideForm: boolean = false;
-  public spinnerText: string = "Please wait.."
-  public signupSuccessfulMessage: string = "Sign up successful! You will redirected soon!"
 
   private closeDialogEmitterSubscription: Subscription;
   private trueAnswearDialogEmitterSubscription: Subscription;
@@ -33,18 +31,19 @@ export class RegisterComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private formBuilder: FormBuilder,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private router: Router
   ) { 
     this.registerForm = this.formBuilder.group({
       emailAddress: new FormControl('', [Validators.email, Validators.required]),
-      password: new FormControl('', [Validators.required, CustomValidators.forbiddenCharacters()]),
-      repeatPassword: new FormControl('', [Validators.required, CustomValidators.forbiddenCharacters()]),
+      password: new FormControl('', [Validators.required]),
+      repeatPassword: new FormControl('', [Validators.required]),
       recaptcha: ['', Validators.required]
     });
   }
 
-  ngOnInit(): void {
-    console.log("Register comp!");
+  ngOnInit() {
+    this.authService.captchaSiteKey$.pipe(takeUntil(this.componentDestroyed$)).subscribe(key => this.siteKey = key);
   }
 
   get fg(){
@@ -67,7 +66,7 @@ export class RegisterComponent implements OnInit {
     return this.registerForm.get('recaptcha');
   }
 
-  private isFormValid(form: FormGroup) {
+  private isFormValid() {
     if (this.password.value !== this.repeatPassword.value) {
       this.repeatPassword.setErrors({ passwordsNotMatching: true });
     }
@@ -76,39 +75,24 @@ export class RegisterComponent implements OnInit {
   }
 
   public submitForm() {
-    if (this.isFormValid(this.registerForm)) {
-      this.displaySpinner = true;
-
-      setTimeout(() => {
-        this.displaySpinner = false;
-        this.hideForm = true;
-      }, 1000);
-
-      this.authService.createUser(this.computeRequestPayload)
+    if (this.isFormValid()) {
+      this.authService.createUser(this.computeRequestPayload())
       .pipe(takeUntil(this.componentDestroyed$))
-      .subscribe(() => {
-        this.openSuccessDialog();
-        // const dialogRef = this.dialog.open(RegisterSucessfulDialogComponent);
-
-        // dialogRef.afterClosed().pipe(takeUntil(this.componentDestroyed$)).subscribe(result => {
-        //   // redirect
-        // });
-      });
-
-      // this.authService.signup()
-      //   .pipe(takeUntil(this.componentDestroyed$))
-      //   .subscribe(response => {
-      //     console.log("authService.signup() => ", response)
-      // });
-    } else {
-      console.log("FORM INVALID");
+      .subscribe(
+        () => {
+          this.openSuccessDialog();
+        },
+        err => {
+          if (err.status === 400) {
+            this.openFailDialog('Email address already in use!');
+          }
+        }
+      );
     }
-    //POST http call
   }
 
   private computeRequestPayload() {
     return {
-      // uniqueID: this.computeUniqueID(),
       emailAddress: this.emailAddress.value,
       password: this.password.value
     };
@@ -130,17 +114,11 @@ export class RegisterComponent implements OnInit {
     console.log('handleSuccess');
   }
 
-  public debug() {
-    console.log("Debug..");
-    console.log("Form erros : ", this.registerForm.errors);
-    console.log("this.emailAddress.errors : ", this.emailAddress.errors);
-  }
-
   private openSuccessDialog() {
     const inputs = [
       {
         name: 'headerText',
-        value: 'Successfully registered!'
+        value: 'Congratulations! You will have to login in order to proceed with the next step!'
       },
       {
         name: 'displayCancel',
@@ -162,8 +140,8 @@ export class RegisterComponent implements OnInit {
         this.closeDialogEmitterSubscription,
         this.trueAnswearDialogEmitterSubscription
       ]);
-      
-      console.log("> onClose > Redirecting to create-profile..");
+
+      this.redirectToLogin();
     });
 
     this.dialogService.trueEventEmitter().subscribe(() => {
@@ -171,7 +149,8 @@ export class RegisterComponent implements OnInit {
         this.closeDialogEmitterSubscription,
         this.trueAnswearDialogEmitterSubscription
       ]);
-      console.log("> Redirecting to create-profile..");
+
+      this.redirectToLogin();
     });
   }
 
@@ -203,7 +182,7 @@ export class RegisterComponent implements OnInit {
         this.trueAnswearDialogEmitterSubscription
       ]);
       
-      console.log("> onClose > registerFailedDialog..");
+      this.resetForm();
     });
 
     this.dialogService.trueEventEmitter().subscribe(() => {
@@ -211,51 +190,23 @@ export class RegisterComponent implements OnInit {
         this.closeDialogEmitterSubscription,
         this.trueAnswearDialogEmitterSubscription
       ]);
-      console.log("> registerFailedDialog..");
+
+      this.resetForm();
     });
   }
 
-  public failDialog() {
-    console.log('failDialog');
-    this.openFailDialog('Email already address in use!');
+  private redirectToLogin() {
+    setTimeout(() => {
+      this.router.navigate(['login']);
+    }, 700);
   }
 
-  public displayDialog() {
-    this.openSuccessDialog();
-    
-    // const inputs = [
-    //   {
-    //     name: 'headerText',
-    //     value: 'Successfully registered!'
-    //   },
-    //   {
-    //     name: 'leftButtonText',
-    //     value: 'Close'
-    //   },
-    //   {
-    //     name: 'rightButtonText',
-    //     value: 'Ok'
-    //   }
-    // ]
-    // this.dialogService.showDialog(this.dialogContainer, NotificationDialogComponent, inputs);
-
-    // this.dialogService.closeEventEmitter().subscribe(() => {
-    //   this.dialogService.hideDialog([
-    //     this.closeDialogEmitterSubscription//,
-    //     // this.trueAnswearDialogEmitterSubscription
-    //   ]);
-      
-    //   console.log("> onClose");
-    // });
-
-    // this.dialogService.trueEventEmitter().subscribe(() => {
-    //   this.dialogService.hideDialog([
-    //     this.closeDialogEmitterSubscription,
-    //     this.trueAnswearDialogEmitterSubscription
-    //   ]);
-    //   console.log("> onTrue");
-    // });
-
+  private resetForm() {
+    this.registerForm.reset();
+    this.emailAddress.setErrors(null);
+    this.password.setErrors(null);
+    this.repeatPassword.setErrors(null);
+    this.captchaElem.resetCaptcha();
   }
 
   ngOnDestroy() {

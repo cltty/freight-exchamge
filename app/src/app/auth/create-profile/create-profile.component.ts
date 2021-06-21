@@ -1,21 +1,21 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { countries } from './models/countries_array/contries_array';
 import { Country } from './models/contry';
-import { MatFileUploadModule } from 'angular-material-fileupload';
 import { FileUploadType } from './models/FileUploadType';
-import { DeleteUploadedFileDialogComponent } from 'src/app/common/delete-uploaded-file-dialog/delete-uploaded-file-dialog.component';
 import { CustomValidators } from 'src/app/common/validators/custom-validator';
 import { AuthService } from '../auth.service';
 import { CompanyProfile } from './models/CompanyProfile';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { postcodeValidator, postcodeValidatorExistsForCountry } from 'postcode-validator';
 import { MatStepper } from '@angular/material/stepper';
 import { ValidatorService } from 'angular-iban';
-import validateVat, {CountryCodes, ViesValidationResponse} from 'validate-vat-ts';
 import { UserService } from 'src/app/user-service/user.service';
+import { DialogService } from 'src/app/services/dialog-service/dialog.service';
+import { AddressDialogComponent } from 'src/app/common/dialogs/address-dialog/address-dialog.component';
+import { Router } from '@angular/router';
+import { NotificationDialogComponent } from 'src/app/common/dialogs/notification-dialog/notification-dialog.component';
 
 @Component({
   selector: 'create-profile',
@@ -26,7 +26,11 @@ import { UserService } from 'src/app/user-service/user.service';
   }]
 })
 export class CreateProfileComponent implements OnInit {
-  // @ViewChild('stepper') stepper;
+  @ViewChild('dialog', { read: ViewContainerRef })
+  public dialogContainer: ViewContainerRef;
+
+  @ViewChild("stepper", { static: false }) stepper: MatStepper;
+
 
   public companyTypes: string[] = [
     "Shipper",
@@ -40,9 +44,6 @@ export class CreateProfileComponent implements OnInit {
   public imgUrlsArray: any[] = [];
   public pdfSrc: any;
 
-  public errorMessage: string;
-  public url: any;
-
   public insuranceDocuments: any = [];
   public operatingLicense: FileUploadType[] = [];
   public operatingLicenseCount: number = 0;
@@ -55,40 +56,31 @@ export class CreateProfileComponent implements OnInit {
   public displayInvalidVatNumberError: boolean = false;
   public invalidVatNumberError: string;
 
-  public displaySpinner: boolean = false;
-  
   private componentDestroyed$: Subject<void> = new Subject<void>();
-  private isVatNumberValid$: Subject<boolean> = new Subject<boolean>();
-  
 
-  // private pdfFile: File;
-  // private selectedFile: File = null;
-  // private fd = new FormData();
-
+  private closeAddressDialogEmitterSubscription: Subscription;
+  private addressSelectedEmitterSubscription: Subscription;
 
   public displayInsuranceDocumentsStepper = false;
 
-  public readyToSubmit: string = "Please fill in the form or check for any errors.";
-
-  @ViewChild("stepper", { static: false }) stepper: MatStepper;
+  private closeDialogEmitterSubscription: Subscription;
+  private trueAnswearDialogEmitterSubscription: Subscription;
 
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private userService: UserService
+    private userService: UserService,
+    private dialogService: DialogService,
+    private router: Router
     ) {
     this.companyDetailsForm = this.formBuilder.group({
       companyLegalName: ['', [ Validators.required, CustomValidators.forbiddenCharacters() ]],
       companyType: ['', [ Validators.required, CustomValidators.forbiddenCharacters() ]],
-      addressLine1: ['', [ Validators.required, CustomValidators.forbiddenCharacters() ]],
-      addressLine2: ['', [ CustomValidators.forbiddenCharacters() ]],
       city: ['', [ Validators.required, CustomValidators.forbiddenCharacters() ]],
-      state: ['', [ CustomValidators.forbiddenCharacters() ]],
+      fullAddress: [''],
       phoneNumber: ['', [ Validators.required, CustomValidators.forbiddenCharacters(), CustomValidators.phoneNumberValidator() ]],
-      postcode: ['', [ Validators.required, CustomValidators.forbiddenCharacters() ]],
-      domiciles: [''],
-      countryName: ['', [ Validators.required ]],
-      vatNumber: ['', [ Validators.required, CustomValidators.forbiddenCharacters() ]]
+      country: ['', [ Validators.required ]],
+      vatNumber: ['', [ Validators.required, CustomValidators.forbiddenCharacters(), CustomValidators.onlyDigits()]]
     });
 
     this.equipmentInvetoryForm = this.formBuilder.group({
@@ -107,20 +99,14 @@ export class CreateProfileComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.companyDetailsForm.setValidators(CustomValidators.postCodeValidator);
-  }
+  ngOnInit(): void {}
 
-  public hasErrors() {
-    console.log(" -> ", this.hasCompanyDetailsFormErrors());
+  get fullAddress() {
+    return this.companyDetailsForm.get('fullAddress');
   }
 
   get companyLegalName() {
     return this.companyDetailsForm.get('companyLegalName');
-  }
-
-  get state() {
-    return this.companyDetailsForm.get('state');
   }
 
   get city() {
@@ -131,28 +117,12 @@ export class CreateProfileComponent implements OnInit {
     return this.companyDetailsForm.get('companyType');
   }
 
-  get addressLine1() {
-    return this.companyDetailsForm.get('addressLine1');
-  }
-
-  get addressLine2() {
-    return this.companyDetailsForm.get('addressLine2');
-  }
-
   get phoneNumber() {
     return this.companyDetailsForm.get('phoneNumber');
   }
 
-  get postcode() {
-    return this.companyDetailsForm.get('postcode');
-  }
-
-  get domiciles() {
-    return this.companyDetailsForm.get('domiciles');
-  }
-
-  get countryName() {
-    return this.companyDetailsForm.get('countryName');
+  get country() {
+    return this.companyDetailsForm.get('country');
   }
 
   get vatNumber() {
@@ -200,20 +170,16 @@ export class CreateProfileComponent implements OnInit {
   }
 
   public inputChangeCompanyDetailsForm(event: any, inputField: string) {
-    console.log(">> inputChangeCompanyDetailsForm()")
-    // console.log("-> event = ", event);
-    // console.log("-> inputField = ", inputField);
-    if (
-      inputField === 'countryName' ||
-      inputField === 'domiciles' ||
-      inputField === 'companyType'
-    ) {
+    if (inputField === 'companyType') {
       this.companyDetailsForm.get(inputField).setValue(event.value);
       return;
     }
     this.companyDetailsForm.get(inputField).setValue(event.target.value);
+    
+    if (inputField === 'vatNumber') {
+      this.checkVatNumber();
+    }
   }
-
 
   public inputChangeEquipmentInvetoryForm(event: any, inputField: string) {
     this.equipmentInvetoryForm.get(inputField).setValue(event.target.value);
@@ -223,10 +189,35 @@ export class CreateProfileComponent implements OnInit {
     this.paymentDetailsForm.get(inputField).setValue(event.target.value);
   }
 
+  public onAddressSelect() {
+    this.dialogService.showAddressDialog(this.dialogContainer, AddressDialogComponent, []);
+
+    this.dialogService.closeAddressDialogEventEmitter().subscribe(() => {
+      this.dialogService.hideAddressDialog([
+        // needed?
+        this.closeAddressDialogEmitterSubscription,
+        this.addressSelectedEmitterSubscription
+      ]);
+    });
+
+    this.dialogService.addressSelectedEventEmitter().subscribe(address => {
+      this.dialogService.hideAddressDialog([
+        this.closeAddressDialogEmitterSubscription,
+        this.addressSelectedEmitterSubscription
+      ]);
+
+      this.setAddress(address.prettyfiedAddress);
+    });
+  }
+
+  private setAddress(address: string) {
+    this.city.setValue(address.split(', ')[0]);
+    this.country.setValue(address.split(', ')[1]);
+    this.fullAddress.setValue(address);
+    this.checkVatNumber();
+  }
+
   public onInsuranceFilesChanged($event) {
-    console.log(">> onFileChanged");
-    // this.pdfFile = $event.target.files[0];
-    // this.selectedFile = <File>$event.target.files[0];
     const reader = new FileReader();
     reader.readAsDataURL($event.target.files[0]);
     reader.onload = (_event) => {
@@ -240,7 +231,6 @@ export class CreateProfileComponent implements OnInit {
   }
 
   public onOperatingLicenseFileChanged($event) {
-    console.log(">> onOperatingFileChanged");
     const reader = new FileReader();
 
     reader.readAsDataURL($event.target.files[0]);
@@ -261,22 +251,12 @@ export class CreateProfileComponent implements OnInit {
     this.operatingLicense.splice(index, 1);
   }
 
-  public testPaymentDetailsForm() {
-    console.log(">> testPaymentDetailsForm");
-    console.log(this.paymentDetailsForm);
-  }
-
   public hasCompanyDetailsFormErrors() {
     return this.companyLegalName.errors ||
           this.companyType.errors || 
-          this.addressLine1.errors ||
-          this.addressLine2.errors ||
           this.city.errors ||
-          this.state.errors ||
           this.phoneNumber.errors ||
-          this.postcode.errors ||
-          this.domiciles.errors ||
-          this.countryName.errors ||
+          this.country.errors ||
           this.vatNumber.errors;
   }
 
@@ -313,19 +293,15 @@ export class CreateProfileComponent implements OnInit {
 
   public computePayload() {
     let profilePayload: CompanyProfile = {
-      emailAddress: this.authService.getUserMailAddress(),
+      userId: this.userService.getUserId(),
+      emailAddress: this.userService.getUserEmailAddress(),
       companyDetails: {
         companyLegalName: this.companyLegalName.value,
         companyType: this.companyType.value,
         vatNumber: this.vatNumber.value,
-        state: this.state.value,
         city: this.city.value,
-        addressLine1: this.addressLine1.value,
-        addressLine2: this.addressLine2.value,
-        phoneNumber: this.phoneNumber.value,
-        postcode: this.postcode.value,
-        domiciles: this.domiciles.value,
-        countryName: this.countryName.value,
+        country: this.country.value,
+        phoneNumber: this.phoneNumber.value
       },
       paymentDetails: {
         accountHolderName: this.accountHolderName.value,
@@ -342,82 +318,96 @@ export class CreateProfileComponent implements OnInit {
         threeHalfVans: this.threeHalfVans.value,
         curtainSidedTrailers: this.curtainSidedTrailers.value,
       };
-
-      profilePayload.insuranceDocuments = this.insuranceDocuments;
-      profilePayload.operatinLicense = this.operatingLicense;
-
+      // profilePayload.insuranceDocuments = this.insuranceDocuments;
+      // profilePayload.operatinLicense = this.operatingLicense;
     }
 
     return profilePayload;
   }
 
+  public debug() {
+    console.log('> debug()');
+    console.log(this.paymentDetailsForm);
+  }
+
   public submitProfile() {
-    if (this.isReadyForSubmit()) {
-      const profilePayload = this.computePayload();
-      
-      switch(this.companyType.value) {
-        case 'Shipper':
-          this.userService.createShipperProfile(profilePayload)
-            .pipe(takeUntil(this.componentDestroyed$))
-            .subscribe(response => {
-                if (response === 'Error') {
-                   this.displayRequestError("HTTP ERROR"); 
-                }
-                else {
-                   this.displaySuccessMessage();
-                }
-          });
-        break;
-        case 'Carrier':
-          this.userService.createCarrierProfile(profilePayload)
-            .pipe(takeUntil(this.componentDestroyed$))
-            .subscribe(response => {
-                if (response === 'Error') {
-                   this.displayRequestError("HTTP ERROR"); 
-                }
-                else {
-                   this.displaySuccessMessage();
-                }
-              });
-        break;
-        default:
-          this.displayRequestError("Please make sure you correctly filled the form");
-        break;
-      }
-    } else {
-      this.displayRequestError("Please make sure you correctly filled the form");
-    }
+    this.userService.createCompanyProfile(this.computePayload()).pipe(takeUntil(this.componentDestroyed$)).subscribe(response => {
+      this.openSuccessDialog();
+      this.userService.setCompanyType(this.companyType.value);
+    });
+  }
+  
+  private openSuccessDialog() {
+    this.dialogService.showDialog(this.dialogContainer, NotificationDialogComponent, this.computeSuccessDialogInputs());
+
+     this.dialogService.closeEventEmitter().subscribe(() => {
+      this.dialogService.hideDialog([
+        this.closeDialogEmitterSubscription,
+        this.trueAnswearDialogEmitterSubscription
+      ]);
+
+      this.redirectToLoadboard();
+    });
+
+    this.dialogService.trueEventEmitter().subscribe(() => {
+      this.dialogService.hideDialog([
+        this.closeDialogEmitterSubscription,
+        this.trueAnswearDialogEmitterSubscription
+      ]);
+
+      this.redirectToLoadboard();
+    });
   }
 
-// TO DO
-
-
-  public displayRequestError(errorMessage: string) {
-    console.log("displayRequestErrorModal() -> ", errorMessage);
+  private computeSuccessDialogInputs() {
+    return [
+      {
+        name: 'headerText',
+        value: 'Company profile successfully created!'
+      },
+      {
+        name: 'displayCancel',
+        value: false
+      },
+      {
+        name: 'rightButtonText',
+        value: 'Ok'
+      },
+      {
+        name: 'displayAfirmative',
+        value: true
+      },
+    ];
   }
 
-  public displaySuccessMessage() {
-    console.log("displaySuccessMessage()");
-  }
-
-  public redirectToLoadboard() {
-    console.log("redirecting to loadboard...");
+  private redirectToLoadboard() {
+    setTimeout(() => {
+      this.router.navigate(['loadboard']);
+    }, 700);
   }
 
   public toggleInsuranceDocumentsStepper() {
     this.displayInsuranceDocumentsStepper = !this.displayInsuranceDocumentsStepper;
   }
 
+  private getCountryCode() {
+    const countryLookUp = this.contriesList.find(country => country.name === this.country.value);
+    return countryLookUp.code;
+  }
 
   private checkVatNumber() {
+    if (!this.country.value) {
+      return;
+    }
     this.userService.checkVatNumber({
-      countryCode: this.countryName.value.code,
+      countryCode: this.getCountryCode(),
       vatNumber: this.vatNumber.value
     }).subscribe(response => {
       if (!response.valid) {
-        this.toggleVatNumberError(false, response.error);
+        this.vatNumber.setErrors({ invalidVatNumber: true });
+      } else {
+        this.vatNumber.setErrors(null);
       }
-      this.isVatNumberValid$.next(response.valid)
     });
   }
 
@@ -431,33 +421,19 @@ export class CreateProfileComponent implements OnInit {
     this.invalidVatNumberError = error;
   }
 
-  public checkFormForErrors() {
-    this.checkVatNumber();
-    this.isVatNumberValid$.pipe(takeUntil(this.componentDestroyed$)).subscribe(flag => {
-      if (flag && !this.companyDetailsForm.errors) {
-        console.log("checkFormForErrors >> FORM HAS NO ERRORS!");
-        // this.stepper.next();
-      } else {
-        // display an error message
-        console.log("checkFormForErrors >> FORM HAS ERRORS!");
-      }
-    });
-  }
+  // private uploadInsuranceDocuments() {
+  //   console.log("--> uploadInsuranceDocuments()");
+  //   this.userService.uploadInsuranceDocuments(this.insuranceDocuments).pipe(takeUntil(this.componentDestroyed$)).subscribe(response => {
+  //     console.log("Response.. " + JSON.stringify(response));
+  //   });
+  // }
 
-
-  private uploadInsuranceDocuments() {
-    console.log("--> uploadInsuranceDocuments()");
-    this.userService.uploadInsuranceDocuments(this.insuranceDocuments).pipe(takeUntil(this.componentDestroyed$)).subscribe(response => {
-      console.log("Response.. " + JSON.stringify(response));
-    });
-  }
-
-  private uploadOperatingLicense() {
-    console.log("--> uploadOperatingLicense()");
-    this.userService.uploadOperatingLicense(this.operatingLicense).pipe(takeUntil(this.componentDestroyed$)).subscribe(response => {
-      console.log("Response.. " + JSON.stringify(response));
-    });
-  }
+  // private uploadOperatingLicense() {
+  //   console.log("--> uploadOperatingLicense()");
+  //   this.userService.uploadOperatingLicense(this.operatingLicense).pipe(takeUntil(this.componentDestroyed$)).subscribe(response => {
+  //     console.log("Response.. " + JSON.stringify(response));
+  //   });
+  // }
 
   public ngOnDestroy(): void {
     this.componentDestroyed$.next();

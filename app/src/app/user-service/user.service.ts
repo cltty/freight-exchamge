@@ -15,17 +15,26 @@ export class UserService {
   private readonly UPLOAD_OPERATING_LICENSE_URL: string = 'documents/operating-license';
   private readonly CREATE_CARRIER_COMPANY_PROFILE: string = 'carrier';
   private readonly CREATE_SHIPPER_COMPANY_PROFILE: string = 'shipper';
+  private readonly CREATE_COMPANY_PROFILE: string = 'companies';
 
   public toggleDefaultNavbar$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
   constructor(private httpClient: HttpClient) {}
 
+  public setUserId(userId: string) {
+    localStorage.setItem('userId', userId);
+  }
+
   public getUserId() {
     return localStorage.getItem('userId');
   }
 
-  public setUserId(userId: string) {
-    localStorage.setItem('userId', userId);
+  public setUserEmailAddress(userEmailAddress: string) {
+    localStorage.setItem('userEmailAddress', userEmailAddress);
+  }
+
+  public getUserEmailAddress() {
+    return localStorage.getItem('userEmailAddress');
   }
 
   public setCompanyType(companyType: string) {
@@ -34,6 +43,20 @@ export class UserService {
 
   public getCompanyType() {
     return localStorage.getItem('companyType');
+  }
+
+  public resetLocalStorage() {
+    this.setUserId(null);
+    this.setUserEmailAddress(null);
+    this.setCompanyType(null);
+  }
+
+  public createCompanyProfile(profilePayload: CompanyProfile) {
+    return this.httpClient.post<any>(
+      this.ENV + this.CREATE_COMPANY_PROFILE, {
+        profilePayload
+      }
+    );
   }
 
   public createCarrierProfile(profilePayload: CompanyProfile) {
