@@ -233,9 +233,6 @@
             <li>
               Cargo Legal Liability: 0.00 SDR/kg
             </li>
-            <li>
-              Automobile (Fleet or Moto): €1,000,000
-            </li>
           </ul>
         </span>
         <span>
@@ -246,8 +243,8 @@
 
       <div class="insurance-form__body">
         <div class="uploaded-files-container">
-          <span class="uploaded-files-container__header" [ngClass]="insuranceDocuments.length === 2 ? 'color-green' : null">
-            {{ insuranceDocuments.length }} of 2 files uploaded
+          <span class="uploaded-files-container__header" [ngClass]="insuranceDocuments.length === 1 ? 'color-green' : null">
+            {{ insuranceDocuments.length }} of 1 files uploaded
           </span>
           <div class="uploaded-files-container__item" *ngFor="let file of insuranceDocuments; let i=index">
             <span>
@@ -259,7 +256,7 @@
           </div>
         </div>
         <input style="display: none" type="file" (change)="onInsuranceFilesChanged($event)" #fileInput>
-        <button mat-raised-button color="primary"  [ngClass]="insuranceDocuments.length === 2 ? 'hide' : null" (click)="fileInput.click()">Select File</button>
+        <button mat-raised-button color="primary"  [ngClass]="insuranceDocuments.length === 1 ? 'hide' : null" (click)="fileInput.click()">Select File</button>
       </div>
 
       <div class="stepper-action-btns">
@@ -273,6 +270,18 @@
   <mat-step *ngIf="companyType.value !== 'Shipper'">
     <form [formGroup]="equipmentInvetoryForm" class="operating-license-form">
       <ng-template matStepLabel>Operating Licence</ng-template>
+
+      <div class="insurance-form__header">
+        <span>
+          <p>Requirements</p>
+          <p>Your company must meet these insurance requirements:</p>
+          <ul>
+            <li>
+              Valid Operating Licence
+            </li>
+          </ul>
+        </span>
+      </div>
 
       <div class="operating-license-form__body">
 
@@ -304,12 +313,11 @@
     </form>
   </mat-step>
 
-  <mat-step [stepControl]="equipmentInvetoryForm">
+  <mat-step [stepControl]="paymentDetailsForm">
     <form [formGroup]="paymentDetailsForm" class="payment-form">
       <ng-template matStepLabel>Payment</ng-template>
   
       <p class="payment-input-field">Add the account where you’d like to receive direct-deposit payments:</p>
-      <button (click)="debug()">Debug</button>    
       <mat-form-field class="payment-input-field">
         <mat-label>Account holder name</mat-label>
         <input matInput formControlName="accountHolderName" required (input)="inputChangePaymentDetailsForm($event, 'accountHolderName')">
@@ -348,9 +356,9 @@
   <mat-step class="stepper-container__stepper-five">
     <ng-template matStepLabel>Done</ng-template>
     <div class="done-container">
-      <p *ngIf="isReadyForSubmit()"> Now you are ready to submit. </p>
+      <p *ngIf="isReadyForSubmit()"> Now you are ready to create you company profile. </p>
       <p *ngIf="!isReadyForSubmit()"> Please fill in all the fields. </p>
-      <button  [disabled]="!isReadyForSubmit()" mat-raised-button color="primary" (click)="submitProfile()">Submit</button>
+      <button  [disabled]="!isReadyForSubmit()" mat-raised-button color="primary" (click)="submitProfile()">Create company profile</button>
       <div>
         <button mat-button matStepperPrevious>Back</button>
         <button mat-button (click)="stepper.reset()">Reset</button>

@@ -17,6 +17,8 @@ export class UserService {
   private readonly CREATE_SHIPPER_COMPANY_PROFILE: string = 'shipper';
   private readonly CREATE_COMPANY_PROFILE: string = 'companies';
 
+  private readonly GET_USER_DOCUMENTS = (userId) => `documents/insurance/${userId}`;
+
   public toggleDefaultNavbar$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
   constructor(private httpClient: HttpClient) {}
@@ -98,6 +100,16 @@ export class UserService {
       this.ENV + this.UPLOAD_INSURANCE_DOCUMENTS_URL, {
         files
       }
+    );
+  }
+
+  public getInsuranceDocuments(userId: any) {
+    // const httpOptions = {
+    //   'responseType'  : 'arraybuffer' as 'json'
+    //    //'responseType'  : 'blob' as 'json'        //This also worked
+    // };
+    return this.httpClient.get<any>(
+      this.ENV + this.GET_USER_DOCUMENTS(userId)
     );
   }
 

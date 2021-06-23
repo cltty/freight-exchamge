@@ -23,6 +23,7 @@
     "@angular/platform-browser-dynamic": "~9.1.4",
     "@angular/router": "~9.1.4",
     "@mat-datetimepicker/core": "^6.0.3",
+    "angular-file-uploader": "^7.0.3",
     "angular-iban": "^4.0.2",
     "angular-material-fileupload": "^3.0.2",
     "bic": "^1.1.1",

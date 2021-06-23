@@ -15,13 +15,8 @@ router.post('/vat-check', (req, res) => {
     switch(internalValidationResponse) {
         case 'success':
             validate( req.body.vatObj.countryCode,  req.body.vatObj.vatNumber,  function(err, validationInfo) {
-                console.log("RESPONSE >> ", validationInfo);
                 if (validationInfo) {
-                    res.send(
-                        {
-                            "valid": validationInfo.valid
-                        }
-                    );
+                    res.send({ "valid": validationInfo.valid });
                 }
                 if (err) {
                     res.send(

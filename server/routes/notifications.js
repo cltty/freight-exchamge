@@ -88,7 +88,7 @@ async function getNotificationById(req, res, next) {
     next();
 }
 
-function sendNotificationViaSMS(phoneNumber, messageSummary, message) {
+function sendNotificationViaSMS(phoneNumber, messageSummary) {
     client.messages
     .create({
         body: messageSummary,

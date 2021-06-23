@@ -74,6 +74,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       ]);
 
       console.log("> openNewReportUserDialog > closeEventEmitter");
+      this.getUnreadNotifications();
     });
 
     this.dialogService.successEventEmitter().subscribe(response => {
@@ -85,7 +86,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       console.log("> openNewReportUserDialog > successEventEmitter > response : ", response);
       this.dashboardService.reportUser(this.computeReportPayload(index, response)).pipe(takeUntil(this.componentDestroyed$)).subscribe();
       this.dashboardService.createNotification(this.computeReportNotificationPayload(index, response)).pipe(takeUntil(this.componentDestroyed$)).subscribe();
-      
+      this.getUnreadNotifications();
       // createNotification
       // reportUser
 

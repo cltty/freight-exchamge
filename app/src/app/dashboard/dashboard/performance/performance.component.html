@@ -16,7 +16,7 @@
 
         <div class="top-section__right">
             <p *ngIf="performance">
-                {{ performance }} %
+                {{ performance | number : '1.2-2' }} %
             </p>
 
             <p *ngIf="!performance">

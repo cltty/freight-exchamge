@@ -16,6 +16,7 @@ import { DialogService } from 'src/app/services/dialog-service/dialog.service';
 import { AddressDialogComponent } from 'src/app/common/dialogs/address-dialog/address-dialog.component';
 import { Router } from '@angular/router';
 import { NotificationDialogComponent } from 'src/app/common/dialogs/notification-dialog/notification-dialog.component';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'create-profile',
@@ -40,12 +41,12 @@ export class CreateProfileComponent implements OnInit {
   @ViewChild('dummyFileInput', { static: false }) dummyFileInput: ElementRef;
 
   public contriesList: Country[] = countries;
-  public imgsArray: any[] = [];
-  public imgUrlsArray: any[] = [];
-  public pdfSrc: any;
+  // public imgsArray: any[] = [];
+  // public imgUrlsArray: any[] = [];
+  // public pdfSrc: any;
 
   public insuranceDocuments: any = [];
-  public operatingLicense: FileUploadType[] = [];
+  public operatingLicense: any[] = [];
   public operatingLicenseCount: number = 0;
 
   public companyDetailsForm: FormGroup;
@@ -71,7 +72,8 @@ export class CreateProfileComponent implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private dialogService: DialogService,
-    private router: Router
+    private router: Router,
+    private sanitizer: DomSanitizer
     ) {
     this.companyDetailsForm = this.formBuilder.group({
       companyLegalName: ['', [ Validators.required, CustomValidators.forbiddenCharacters() ]],
@@ -236,6 +238,7 @@ export class CreateProfileComponent implements OnInit {
     reader.readAsDataURL($event.target.files[0]);
     reader.onload = (_event) => {
       this.operatingLicense.push({
+        usedFor: 'operatingLicense',
         type: $event.target.files[0].type === 'application/pdf' ? 'pdf' : 'img',
         name:  $event.target.files[0].name,
         file: reader.result
@@ -318,22 +321,20 @@ export class CreateProfileComponent implements OnInit {
         threeHalfVans: this.threeHalfVans.value,
         curtainSidedTrailers: this.curtainSidedTrailers.value,
       };
-      // profilePayload.insuranceDocuments = this.insuranceDocuments;
-      // profilePayload.operatinLicense = this.operatingLicense;
     }
 
     return profilePayload;
   }
 
-  public debug() {
-    console.log('> debug()');
-    console.log(this.paymentDetailsForm);
-  }
-
   public submitProfile() {
-    this.userService.createCompanyProfile(this.computePayload()).pipe(takeUntil(this.componentDestroyed$)).subscribe(response => {
+    this.userService.createCompanyProfile(this.computePayload()).pipe(takeUntil(this.componentDestroyed$)).subscribe(() => {
       this.openSuccessDialog();
       this.userService.setCompanyType(this.companyType.value);
+      
+      if (this.companyType.value === 'Carrier') {
+        this.uploadInsuranceDocuments();
+        this.uploadOperatingLicense();
+      }
     });
   }
   
@@ -342,8 +343,8 @@ export class CreateProfileComponent implements OnInit {
 
      this.dialogService.closeEventEmitter().subscribe(() => {
       this.dialogService.hideDialog([
-        this.closeDialogEmitterSubscription,
-        this.trueAnswearDialogEmitterSubscription
+        // this.closeDialogEmitterSubscription,
+        // this.trueAnswearDialogEmitterSubscription
       ]);
 
       this.redirectToLoadboard();
@@ -351,8 +352,8 @@ export class CreateProfileComponent implements OnInit {
 
     this.dialogService.trueEventEmitter().subscribe(() => {
       this.dialogService.hideDialog([
-        this.closeDialogEmitterSubscription,
-        this.trueAnswearDialogEmitterSubscription
+        // this.closeDialogEmitterSubscription,
+        // this.trueAnswearDialogEmitterSubscription
       ]);
 
       this.redirectToLoadboard();
@@ -421,10 +422,75 @@ export class CreateProfileComponent implements OnInit {
     this.invalidVatNumberError = error;
   }
 
-  // private uploadInsuranceDocuments() {
-  //   console.log("--> uploadInsuranceDocuments()");
-  //   this.userService.uploadInsuranceDocuments(this.insuranceDocuments).pipe(takeUntil(this.componentDestroyed$)).subscribe(response => {
-  //     console.log("Response.. " + JSON.stringify(response));
+  private uploadInsuranceDocuments() {
+    this.userService.uploadInsuranceDocuments({
+      userId: this.userService.getUserId(),
+      usedFor: 'insurance',
+      type: this.insuranceDocuments[0].type,
+      name: this.insuranceDocuments[0].name,
+      file: this.insuranceDocuments[0].file
+    }).pipe(takeUntil(this.componentDestroyed$)).subscribe();
+  }
+
+  private uploadOperatingLicense() {
+    this.userService.uploadInsuranceDocuments({
+      userId: this.userService.getUserId(),
+      usedFor: 'operatingLicense',
+      type: this.operatingLicense[0].type,
+      name: this.operatingLicense[0].name,
+      file: this.operatingLicense[0].file
+    }).pipe(takeUntil(this.componentDestroyed$)).subscribe();
+  }
+
+  // public testGetFile() {
+  //   this.userService.getInsuranceDocuments(this.userService.getUserId()).pipe(takeUntil(this.componentDestroyed$)).subscribe(rsp => {
+  //     console.log("Get result : ", rsp);
+
+  //     let TYPED_ARRAY = new Uint8Array(rsp[0].document.data);
+  //     console.log("TYPED_ARRAY : ", TYPED_ARRAY);
+  //     const STRING_CHAR = String.fromCharCode.apply(null, TYPED_ARRAY);
+  //     console.log("STRING_CHAR : ", STRING_CHAR);
+  //     let base64String = btoa(STRING_CHAR);
+  //     console.log("base64String : ", ("data:application/pdf;base64," + base64String));
+  //     this.pdfTest = ("data:application/pdf;base64," + base64String);
+      
+  //     // let imageurl = this.sanitizer.bypassSecurityTrustUrl('data:application/pdf;base64,' + base64String);
+  //     // this.pdfSrc = 'data:application/pdf;base64,' + base64String; 
+  //     // console.log('image url > ', this.pdfSrc);
+  //     // const reader = new FileReader();
+
+  //     // let file = new Blob([rsp[0].document.data], { type: 'application/pdf' }); 
+  //     // var fileURL = URL.createObjectURL(file)
+  //     // console.log('file > ', file);
+  //     // console.log('fileURL > ', fileURL);
+  //     // this.pdfSrc = fileURL;
+
+  //     // reader.readAsArrayBuffer(rsp[0].document.data);
+  //     // reader.onload = (_event) => {
+  //     //   console.log("reader.result > ", reader.result);
+  //     // };
+
+  //     // console.log("-> ", new Blob([rsp[0].document.data], { type: 'application/pdf' }));
+
+  //     // let file = new Blob([rsp[0].document.data], { type: 'application/pdf' });            
+  //     // var fileURL = URL.createObjectURL(file);
+      
+  //     // this.pdfSrc = fileURL;
+  //     // console.log('FIleURL : ', fileURL);
+  //     // window.open(fileURL);
+
+  //     // let array: string;
+  //     // rsp[0].document.data.forEach(el => {
+  //     //   array = String(array + el);
+  //     // });
+
+  //     // console.log(array);
+
+  //     // let file = new Blob([array], { type: 'application/pdf' });            
+  //     // var fileURL = URL.createObjectURL(file);
+  //     // window.open(fileURL);
+  //     // this.pdfSrc = rsp[0].document.data.toString();
+  //     // this.pdfSrc = FileReader(rsp[0].document.data);//rsp[0].document.
   //   });
   // }
 

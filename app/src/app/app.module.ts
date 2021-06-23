@@ -51,6 +51,7 @@ import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-mat
 import { MatDatetimepickerModule, MatNativeDatetimeModule } from "@mat-datetimepicker/core";
 import { ReportUserDialogComponent } from './common/dialogs/report-user-dialog/report-user-dialog.component';
 import { TextFieldModule } from '@angular/cdk/text-field';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import { TextFieldModule } from '@angular/cdk/text-field';
     NotificationDialogComponent,
     NewLoadDialogComponent,
     AddressDialogComponent,
-    ReportUserDialogComponent
+    ReportUserDialogComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

@@ -82,7 +82,6 @@ router.post('/', async (req, res) => {
 
 // Book load
 router.patch('/book/:loadId',  getLoadById, async (req, res) => {
-    // res.user.temporaryBanned = req.body.temporaryBanned;
     
     res.load.booked.isBooked = req.body.book;
     res.load.booked.carrierId = req.body.carrierId;

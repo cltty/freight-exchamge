@@ -5,6 +5,7 @@ import { GetStartedComponent } from './auth/get-started/get-started.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
+import { HomeComponent } from './home/home.component';
 
 const routes: Routes = [
   { path: 'login', 
@@ -25,6 +26,11 @@ const routes: Routes = [
     path: 'loadboard', 
     component: DashboardComponent, 
   },
+  {
+    path: 'home',
+    component: HomeComponent
+  },
+  { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 
 @NgModule({

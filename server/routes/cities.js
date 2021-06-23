@@ -20,12 +20,12 @@ router.post('/', async (req, res) => {
             res.statusCode(500);
         }
         if (distances.status == 'OK') {
-            for (var i = 0; i < origins.length; i++) {
-                for (var j = 0; j < destinations.length; j++) {
-                    var origin = distances.origin_addresses[i];
-                    var destination = distances.destination_addresses[j];
+            for (let i = 0; i < origins.length; i++) {
+                for (let j = 0; j < destinations.length; j++) {
+                    let origin = distances.origin_addresses[i];
+                    let destination = distances.destination_addresses[j];
                     if (distances.rows[0].elements[j].status == 'OK') {
-                        var distance = distances.rows[i].elements[j].distance.text;
+                        let distance = distances.rows[i].elements[j].distance.text;
                         res.status(200).send({ distance: distance });
                     } else {
                         res.status(500).send({ distance: 'Not reachable' });

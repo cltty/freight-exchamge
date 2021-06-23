@@ -60,7 +60,7 @@ router.patch('/:id', [authenticateToken, getUser], async (req, res) => {
 });
 
 // Update temporaryBanned prop by ID
-router.patch('/temporary-ban/:id', [authenticateToken, adminRights, getUser], async (req, res) => {
+router.patch('/temporary-ban/:id', [authenticateToken, getUser], async (req, res) => {
     res.user.temporaryBanned = req.body.temporaryBanned;
 
     try {

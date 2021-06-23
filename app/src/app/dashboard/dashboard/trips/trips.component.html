@@ -51,9 +51,6 @@
                                     {{ workOpportunity.payout }} €
                                 </div>
                             </div>
-                            <div *ngIf="companyType === 'Shipper' && !workOpportunity.cancelled && !workOpportunity.rejected && workOpportunity.booked.isBooked" class="booked-flag">
-                                <p>Booked</p>
-                            </div>
                             <div class="action-btn">
                                 <div class="cancelled-rejected">
                                     <p *ngIf="workOpportunity.cancelled">Cancelled</p>
