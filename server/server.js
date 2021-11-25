@@ -6,11 +6,9 @@ const cors = require('cors')
 const morgan = require('morgan');
 const config = require('./config/config.js'); // needed anymore?
 const jwt = require('jsonwebtoken');
-const cookieParser = require('cookie-parser'); // needed anymore?
 
 const vatCheck = require('./routes/vatCheck');
 const insuranceDocs = require('./routes/insuranceDocs');
-const operatingLicense = require('./routes/operatingLicense');
 
 const authenticateToken = require('./utils/authMiddleware');
 
@@ -26,7 +24,6 @@ app.use(express.json());
 app.use(morgan('tiny'));
 app.use(vatCheck);
 app.use(insuranceDocs);
-app.use(operatingLicense);
 
 //handling users related requests
 const usersRouter = require('./routes/users');

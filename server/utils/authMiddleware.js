@@ -1,10 +1,6 @@
 const jwt = require('jsonwebtoken');
 module.exports = function authenticateToken(req, res, next) {
-    // cookies vs header
     const token =  req.cookies.accessToken || null;
-    
-    // const authHeader = req.headers['authorization'];
-    // const token = authHeader && authHeader.split(' ')[1];
 
     if (token == null) {
         return res.sendStatus(401);
