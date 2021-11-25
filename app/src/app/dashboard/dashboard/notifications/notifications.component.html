@@ -2,7 +2,7 @@
     <div class='header'>
         <div *ngIf="unreadNotifications?.length > 1">{{ unreadNotifications?.length }} unread notifications!</div>
         <div *ngIf="unreadNotifications?.length === 1">{{ unreadNotifications?.length }} unread notification!</div>
-        <div *ngIf="unreadNotifications?.length === 0">Nothing new!</div>    
+        <div *ngIf="unreadNotifications?.length === 0">Nothing new!</div>
     </div>
 
     <div class="work-opportunities">
@@ -18,15 +18,11 @@
                         </mat-panel-title>
                         <mat-panel-description class="panel-description">
                             <div class="message">
-                                <!-- {{ unreadNotification.message }} -->
                                 {{ unreadNotification.messageSummary }}
                             </div>
                             <div class="action-btn">
-                                <!-- <button (click)="openNewReportUserDialog(i)">openNewDialog</button> -->
                                 <button *ngIf="companyType === 'Carrier'" mat-raised-button color="warn" (click)="openNewReportUserDialog(i);$event.stopPropagation()">Report Shipper</button>
                                 <button *ngIf="companyType === 'Shipper'" mat-raised-button color="warn" (click)="openNewReportUserDialog(i);$event.stopPropagation()">Report Carrier</button>
-                                <!-- <button *ngIf="companyType === 'Carrier'" mat-raised-button color="warn" (click)="reportShipper(i, unreadNotification.from.companyLegalName);$event.stopPropagation()">Report Shipper</button>
-                                <button *ngIf="companyType === 'Shipper'" mat-raised-button color="warn" (click)="reportCarrier(i, unreadNotification.from.companyLegalName);$event.stopPropagation()">Report Carrier</button> -->
                                 <button mat-raised-button color="primary" (click)="markAsRead(i);$event.stopPropagation()">Mark As Read</button>
                             </div>
                         </mat-panel-description>

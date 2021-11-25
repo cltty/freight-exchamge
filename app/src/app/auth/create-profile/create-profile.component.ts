@@ -134,15 +134,15 @@ export class CreateProfileComponent implements OnInit {
   get standardTractorUnits() {
     return this.equipmentInvetoryForm.get('standardTractorUnits');
   }
-  
+
   get sevenHalfTrucks() {
     return this.equipmentInvetoryForm.get('sevenHalfTrucks');
   }
-  
+
   get threeHalfTailiftVans() {
     return this.equipmentInvetoryForm.get('threeHalfTailiftVans');
   }
-  
+
   get threeHalfVans() {
     return this.equipmentInvetoryForm.get('threeHalfVans');
   }
@@ -162,7 +162,7 @@ export class CreateProfileComponent implements OnInit {
   get swiftBicCode() {
     return this.paymentDetailsForm.get('swiftBicCode');
   }
-  
+
   get ibanNumber() {
     return this.paymentDetailsForm.get('ibanNumber');
   }
@@ -177,7 +177,7 @@ export class CreateProfileComponent implements OnInit {
       return;
     }
     this.companyDetailsForm.get(inputField).setValue(event.target.value);
-    
+
     if (inputField === 'vatNumber') {
       this.checkVatNumber();
     }
@@ -195,11 +195,7 @@ export class CreateProfileComponent implements OnInit {
     this.dialogService.showAddressDialog(this.dialogContainer, AddressDialogComponent, []);
 
     this.dialogService.closeAddressDialogEventEmitter().subscribe(() => {
-      this.dialogService.hideAddressDialog([
-        // needed?
-        this.closeAddressDialogEmitterSubscription,
-        this.addressSelectedEmitterSubscription
-      ]);
+      this.dialogService.hideAddressDialog([]);
     });
 
     this.dialogService.addressSelectedEventEmitter().subscribe(address => {
@@ -242,7 +238,7 @@ export class CreateProfileComponent implements OnInit {
         type: $event.target.files[0].type === 'application/pdf' ? 'pdf' : 'img',
         name:  $event.target.files[0].name,
         file: reader.result
-      }); 
+      });
     };
   }
 
@@ -256,7 +252,7 @@ export class CreateProfileComponent implements OnInit {
 
   public hasCompanyDetailsFormErrors() {
     return this.companyLegalName.errors ||
-          this.companyType.errors || 
+          this.companyType.errors ||
           this.city.errors ||
           this.phoneNumber.errors ||
           this.country.errors ||
@@ -265,7 +261,7 @@ export class CreateProfileComponent implements OnInit {
 
   public hasEquipmentInvetoryFormErrors() {
     return this.standardTractorUnits.errors ||
-          this.sevenHalfTrucks.errors || 
+          this.sevenHalfTrucks.errors ||
           this.threeHalfTailiftVans.errors ||
           this.threeHalfVans.errors ||
           this.boxTrailers.errors ||
@@ -274,7 +270,7 @@ export class CreateProfileComponent implements OnInit {
 
   public hasPaymentDetailsFormErrors() {
     return this.accountHolderName.errors ||
-          this.swiftBicCode.errors || 
+          this.swiftBicCode.errors ||
           this.ibanNumber.errors;
   }
 
@@ -330,32 +326,24 @@ export class CreateProfileComponent implements OnInit {
     this.userService.createCompanyProfile(this.computePayload()).pipe(takeUntil(this.componentDestroyed$)).subscribe(() => {
       this.openSuccessDialog();
       this.userService.setCompanyType(this.companyType.value);
-      
+
       if (this.companyType.value === 'Carrier') {
         this.uploadInsuranceDocuments();
         this.uploadOperatingLicense();
       }
     });
   }
-  
+
   private openSuccessDialog() {
     this.dialogService.showDialog(this.dialogContainer, NotificationDialogComponent, this.computeSuccessDialogInputs());
 
      this.dialogService.closeEventEmitter().subscribe(() => {
-      this.dialogService.hideDialog([
-        // this.closeDialogEmitterSubscription,
-        // this.trueAnswearDialogEmitterSubscription
-      ]);
-
+      this.dialogService.hideDialog([]);
       this.redirectToLoadboard();
     });
 
     this.dialogService.trueEventEmitter().subscribe(() => {
-      this.dialogService.hideDialog([
-        // this.closeDialogEmitterSubscription,
-        // this.trueAnswearDialogEmitterSubscription
-      ]);
-
+      this.dialogService.hideDialog([]);
       this.redirectToLoadboard();
     });
   }
@@ -416,7 +404,7 @@ export class CreateProfileComponent implements OnInit {
     if (resetFlag) {
       this.displayInvalidVatNumberError = false;
       this.invalidVatNumberError = '';
-      return; 
+      return;
     }
     this.displayInvalidVatNumberError = true;
     this.invalidVatNumberError = error;
@@ -441,65 +429,6 @@ export class CreateProfileComponent implements OnInit {
       file: this.operatingLicense[0].file
     }).pipe(takeUntil(this.componentDestroyed$)).subscribe();
   }
-
-  // public testGetFile() {
-  //   this.userService.getInsuranceDocuments(this.userService.getUserId()).pipe(takeUntil(this.componentDestroyed$)).subscribe(rsp => {
-  //     console.log("Get result : ", rsp);
-
-  //     let TYPED_ARRAY = new Uint8Array(rsp[0].document.data);
-  //     console.log("TYPED_ARRAY : ", TYPED_ARRAY);
-  //     const STRING_CHAR = String.fromCharCode.apply(null, TYPED_ARRAY);
-  //     console.log("STRING_CHAR : ", STRING_CHAR);
-  //     let base64String = btoa(STRING_CHAR);
-  //     console.log("base64String : ", ("data:application/pdf;base64," + base64String));
-  //     this.pdfTest = ("data:application/pdf;base64," + base64String);
-      
-  //     // let imageurl = this.sanitizer.bypassSecurityTrustUrl('data:application/pdf;base64,' + base64String);
-  //     // this.pdfSrc = 'data:application/pdf;base64,' + base64String; 
-  //     // console.log('image url > ', this.pdfSrc);
-  //     // const reader = new FileReader();
-
-  //     // let file = new Blob([rsp[0].document.data], { type: 'application/pdf' }); 
-  //     // var fileURL = URL.createObjectURL(file)
-  //     // console.log('file > ', file);
-  //     // console.log('fileURL > ', fileURL);
-  //     // this.pdfSrc = fileURL;
-
-  //     // reader.readAsArrayBuffer(rsp[0].document.data);
-  //     // reader.onload = (_event) => {
-  //     //   console.log("reader.result > ", reader.result);
-  //     // };
-
-  //     // console.log("-> ", new Blob([rsp[0].document.data], { type: 'application/pdf' }));
-
-  //     // let file = new Blob([rsp[0].document.data], { type: 'application/pdf' });            
-  //     // var fileURL = URL.createObjectURL(file);
-      
-  //     // this.pdfSrc = fileURL;
-  //     // console.log('FIleURL : ', fileURL);
-  //     // window.open(fileURL);
-
-  //     // let array: string;
-  //     // rsp[0].document.data.forEach(el => {
-  //     //   array = String(array + el);
-  //     // });
-
-  //     // console.log(array);
-
-  //     // let file = new Blob([array], { type: 'application/pdf' });            
-  //     // var fileURL = URL.createObjectURL(file);
-  //     // window.open(fileURL);
-  //     // this.pdfSrc = rsp[0].document.data.toString();
-  //     // this.pdfSrc = FileReader(rsp[0].document.data);//rsp[0].document.
-  //   });
-  // }
-
-  // private uploadOperatingLicense() {
-  //   console.log("--> uploadOperatingLicense()");
-  //   this.userService.uploadOperatingLicense(this.operatingLicense).pipe(takeUntil(this.componentDestroyed$)).subscribe(response => {
-  //     console.log("Response.. " + JSON.stringify(response));
-  //   });
-  // }
 
   public ngOnDestroy(): void {
     this.componentDestroyed$.next();

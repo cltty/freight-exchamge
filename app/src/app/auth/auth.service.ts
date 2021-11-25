@@ -14,7 +14,7 @@ export class AuthService {
   private readonly ENV: string = 'http://localhost:4000';
   private readonly LOGIN_URL: string = '/login';
   private readonly LOGOUT_URL: string = '/logout';
-  
+
   public captchaSiteKey$: BehaviorSubject<string> = new BehaviorSubject<string>("6Lf3OPwaAAAAACDAWgSCyUBOer_nSTTSjhY_ATyt");
 
   public wrongLoginCredentials$: Subject<void> = new Subject<void>();
@@ -53,7 +53,4 @@ public createCarrierProfile(profilePayload: CompanyProfile) {
   );
 }
 
-// public getUserMailAddress() {
-//   return "dummyData@gmail.com";
-// }
 }

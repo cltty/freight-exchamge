@@ -7,7 +7,7 @@ import { CompanyProfile } from '../auth/create-profile/models/CompanyProfile';
   providedIn: 'root'
 })
 export class UserService {
-  private readonly ENV: string = 'http://localhost:3000/'; 
+  private readonly ENV: string = 'http://localhost:3000/';
   private readonly CHECK_VAT_NUMBER: string = 'vat-check';
   private readonly CHECK_FILE_UPLOAD: string = 'documents/insurance';
 
@@ -104,10 +104,6 @@ export class UserService {
   }
 
   public getInsuranceDocuments(userId: any) {
-    // const httpOptions = {
-    //   'responseType'  : 'arraybuffer' as 'json'
-    //    //'responseType'  : 'blob' as 'json'        //This also worked
-    // };
     return this.httpClient.get<any>(
       this.ENV + this.GET_USER_DOCUMENTS(userId)
     );

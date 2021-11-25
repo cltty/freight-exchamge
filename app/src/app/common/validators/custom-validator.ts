@@ -1,19 +1,18 @@
-import { AbstractControl, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
-import { postcodeValidator, postcodeValidatorExistsForCountry } from 'postcode-validator';
-import validateVat, {CountryCodes, ViesValidationResponse} from 'validate-vat-ts';
+import { AbstractControl, FormGroup, ValidatorFn } from '@angular/forms';
+import { postcodeValidator } from 'postcode-validator';
 
 export class CustomValidators {
     public static forbiddenCharacters(): ValidatorFn {
         return (control: AbstractControl): { [key: string]: boolean } | null => {
-            return (control.value && control.value.match(/^.*?(?=[\^#%&$\*:.;!<>\?/\{\|\}]).*$/)) 
-                ? { invalidCharacters: true } : null;  
+            return (control.value && control.value.match(/^.*?(?=[\^#%&$\*:.;!<>\?/\{\|\}]).*$/))
+                ? { invalidCharacters: true } : null;
         };
     }
 
     public static onlyDigits(): ValidatorFn {
         return (control: AbstractControl): { [key: string]: boolean } | null => {
-            return (/^\d+$/.test(control.value)) 
-                ? null : { onlyDigitsError: true };  
+            return (/^\d+$/.test(control.value))
+                ? null : { onlyDigitsError: true };
         };
     }
 
@@ -26,8 +25,8 @@ export class CustomValidators {
 
     public static phoneNumberValidator(): ValidatorFn {
         return (control: AbstractControl): { [key: string]: boolean } | null => {
-            return (control.value.length < 10 || control.value.length > 12) 
-                ? { invalidPhoneNumber: true } : null;  
+            return (control.value.length < 10 || control.value.length > 12)
+                ? { invalidPhoneNumber: true } : null;
         };
     }
 }

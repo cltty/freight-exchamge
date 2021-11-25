@@ -14,14 +14,12 @@ export class GetStartedComponent implements OnInit {
   }
 
   public redirectToRegister() {
-    // disable it
     setTimeout(() => {
       this.router.navigate(['get-started/register']);
     }, 700);
   }
 
   public redirectToLogin() {
-    // disable it
     setTimeout(() => {
       this.router.navigate(['login']);
     }, 700);

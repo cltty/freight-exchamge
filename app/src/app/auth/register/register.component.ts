@@ -19,8 +19,8 @@ export class RegisterComponent implements OnInit {
 
   @ViewChild('captchaElem') captchaElem: ReCaptcha2Component;
 
-  public siteKey;//: string = '6Lf3OPwaAAAAACDAWgSCyUBOer_nSTTSjhY_ATyt';
-  
+  public siteKey;
+
   public registerForm: FormGroup;
 
   private closeDialogEmitterSubscription: Subscription;
@@ -33,7 +33,7 @@ export class RegisterComponent implements OnInit {
     private formBuilder: FormBuilder,
     private dialogService: DialogService,
     private router: Router
-  ) { 
+  ) {
     this.registerForm = this.formBuilder.group({
       emailAddress: new FormControl('', [Validators.email, Validators.required]),
       password: new FormControl('', [Validators.required]),
@@ -70,7 +70,7 @@ export class RegisterComponent implements OnInit {
     if (this.password.value !== this.repeatPassword.value) {
       this.repeatPassword.setErrors({ passwordsNotMatching: true });
     }
-    
+
     return this.registerForm.valid;
   }
 
@@ -181,7 +181,7 @@ export class RegisterComponent implements OnInit {
         this.closeDialogEmitterSubscription,
         this.trueAnswearDialogEmitterSubscription
       ]);
-      
+
       this.resetForm();
     });
 

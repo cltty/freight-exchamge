@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-notification-dialog',
   templateUrl: './notification-dialog.component.html',
   styleUrls: ['./notification-dialog.component.scss']
 })
-export class NotificationDialogComponent implements OnInit {
+export class NotificationDialogComponent {
   @Input()
   public headerText: string;
 
@@ -20,7 +20,7 @@ export class NotificationDialogComponent implements OnInit {
 
   @Input()
   public displayAfirmative: boolean;
-  
+
   @Output()
   public closeEventEmitter: EventEmitter<void> = new EventEmitter<void>();
 
@@ -29,16 +29,11 @@ export class NotificationDialogComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void {
-  }
-
   public onClose() {
-    console.log('onClose()');
     this.closeEventEmitter.emit();
   }
 
   public onAfirmative() {
-    console.log('onAfirmative()');
     this.afirmativeEventEmitter.emit();
   }
 

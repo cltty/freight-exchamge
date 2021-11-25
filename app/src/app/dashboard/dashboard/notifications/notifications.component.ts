@@ -16,10 +16,10 @@ import { DashboardService } from '../../service/dashboard.service';
 export class NotificationsComponent implements OnInit, OnDestroy {
   @ViewChild('dialog', { read: ViewContainerRef })
   public dialogContainer: ViewContainerRef;
-  
+
   @Input()
   public companyProfile: CompanyProfile;
-  
+
   public unreadNotifications: any[];
 
   public companyType: string;
@@ -87,21 +87,10 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       this.dashboardService.reportUser(this.computeReportPayload(index, response)).pipe(takeUntil(this.componentDestroyed$)).subscribe();
       this.dashboardService.createNotification(this.computeReportNotificationPayload(index, response)).pipe(takeUntil(this.componentDestroyed$)).subscribe();
       this.getUnreadNotifications();
-      // createNotification
-      // reportUser
-
-      // this.dashboardService.reportUser(this.computeReportShipperPayload(index)).subscribe();
-      
-      // this.dashboardService.createNotification(this.computeLoadCancelledNotificationPayload(workOpportunity))
-      //         .pipe(takeUntil(this.componentDestroyed$))
-      //         .subscribe();
     });
   }
 
   private computeReportPayload(index, report: any) {
-    console.log('> computeReportPayload()');
-    console.log(">> ", this.unreadNotifications[index]);
-    console.log('> ', this.companyProfile);
     return {
       read: false,
       userId: this.unreadNotifications[index].from.userId,
@@ -117,10 +106,6 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }
 
   private computeReportNotificationPayload(index, report: any) {
-    console.log('> computeReportNotificationPayload');
-    console.log(">> ", this.unreadNotifications[index]);
-    console.log('> ', this.companyProfile);
-    
     return {
       read: false,
       for: {
@@ -155,12 +140,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         this.closeDialogEmitterSubscription,
         this.trueAnswearDialogEmitterSubscription
       ]);
-      
+
       this.dashboardService.reportUser(this.computeReportShipperPayload(index)).subscribe();
-      
-      // this.dashboardService.createNotification(this.computeLoadCancelledNotificationPayload(workOpportunity))
-      //         .pipe(takeUntil(this.componentDestroyed$))
-      //         .subscribe();
     });
   }
 
@@ -179,7 +160,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         this.closeDialogEmitterSubscription,
         this.trueAnswearDialogEmitterSubscription
       ]);
-      
+
       this.dashboardService.reportUser(this.computeReportCarrierPayload(index)).subscribe();
     });
   }
@@ -199,10 +180,10 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         this.closeDialogEmitterSubscription,
         this.trueAnswearDialogEmitterSubscription
       ]);
-      
+
       this.dashboardService.markAsRead(this.unreadNotifications[index]._id).subscribe(() => {
         this.getUnreadNotifications();
-      }); 
+      });
     });
   }
 

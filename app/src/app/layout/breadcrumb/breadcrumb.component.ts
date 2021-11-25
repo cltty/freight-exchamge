@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 const names = [
   {
@@ -12,7 +12,7 @@ const names = [
   {
     name: "Get Started",
     route: "get-started"
-  }  
+  }
 ];
 
 @Component({
@@ -20,12 +20,9 @@ const names = [
   templateUrl: './breadcrumb.component.html',
   styleUrls: ['./breadcrumb.component.scss']
 })
-export class BreadcrumbComponent implements OnInit {
+export class BreadcrumbComponent {
   public names: any[] = names;
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
 
 }
